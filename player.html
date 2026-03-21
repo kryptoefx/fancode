@@ -23,9 +23,12 @@ const API = "https://raw.githubusercontent.com/Jitendra-unatti/fancode/refs/head
 const params = new URLSearchParams(window.location.search);
 const matchId = params.get("id");
 
-let player;
+let streamUrl = "";
+const knownQuals = [];
+const video = document.getElementById('video');
+let player, selectedHeight = null;
 
-// ✅ FETCH STREAM USING REAL match_id
+// 🔥 GET STREAM USING REAL match_id
 async function getStream() {
   const res = await fetch(API);
   const data = await res.json();
@@ -34,33 +37,111 @@ async function getStream() {
 
   if (!match) {
     alert("Match not found");
-    return null;
+    return;
   }
 
-  return match.stream;
+  streamUrl = match.stream;
 }
 
-// ✅ INIT PLAYER
-async function init() {
-  const streamUrl = await getStream();
+// ── TG popup (UNCHANGED) ─────────────────────────────────
+(function(){
+  const overlay  = document.getElementById('tg-overlay');
+  const closeBtn = document.getElementById('tg-close');
+  const laterBtn = document.getElementById('tg-later');
+  const dismiss  = () => { overlay.classList.add('hidden'); sessionStorage.setItem('tg','1'); };
+  if (sessionStorage.getItem('tg')) overlay.classList.add('hidden');
+  closeBtn.addEventListener('click', dismiss);
+  laterBtn.addEventListener('click', dismiss);
+  overlay.addEventListener('click', e => { if(e.target===overlay) dismiss(); });
+})();
 
-  if (!streamUrl) return;
+// ── Custom quality UI (UNCHANGED) ─────────────────────────
+class QualityButton extends shaka.ui.Element {
+  constructor(parent, controls) {
+    super(parent, controls);
+    this.btn = document.createElement('button');
+    this.btn.className = 'custom-quality-btn';
+    this.btn.innerHTML = '&#9881; <span id="ql">Auto</span>';
+    this.menu = document.createElement('div');
+    this.menu.className = 'custom-quality-menu';
+    const wrap = document.createElement('div');
+    wrap.style.cssText = 'position:relative;display:flex;align-items:center;';
+    wrap.appendChild(this.menu);
+    wrap.appendChild(this.btn);
+    parent.appendChild(wrap);
+    this.btn.addEventListener('click', e => { e.stopPropagation(); this.menu.classList.toggle('open'); });
+    document.addEventListener('click', () => this.menu.classList.remove('open'));
+  }
+}
+QualityButton.Factory = class {
+  create(rootElement, controls) { return new QualityButton(rootElement, controls); }
+};
+shaka.ui.Controls.registerElement('custom_quality', new QualityButton.Factory());
 
-  const video = document.getElementById("video");
+function buildQualityMenu(menuEl, tracks) {
+  menuEl.innerHTML = '';
+  const autoDiv = document.createElement('div');
+  autoDiv.textContent = 'Auto';
+  autoDiv.className = 'selected';
+  autoDiv.onclick = () => {
+    selectedHeight = null;
+    player.configure({ abr:{ enabled:true } });
+    menuEl.classList.remove('open');
+  };
+  menuEl.appendChild(autoDiv);
 
-  player = new shaka.Player(video);
+  const seen = new Set();
+  tracks.sort((a,b)=>b.height-a.height).forEach(t => {
+    if (seen.has(t.height)) return;
+    seen.add(t.height);
+    const d = document.createElement('div');
+    d.textContent = t.height+'p';
+    d.onclick = () => {
+      selectedHeight = t.height;
+      player.configure({ abr:{ enabled:false } });
+      const match = player.getVariantTracks().find(v=>v.height===t.height);
+      if (match) player.selectVariantTrack(match, true);
+      menuEl.classList.remove('open');
+    };
+    menuEl.appendChild(d);
+  });
+}
 
+// ── PLAYER INIT ───────────────────────────────────────────
+async function initializePlayer() {
   try {
+    player = new shaka.Player();
+    await player.attach(video);
+
+    const container = document.querySelector('.shaka-video-container');
+    const ui = new shaka.ui.Overlay(player, container, video);
+
+    ui.configure({
+      controlPanelElements:[
+        'play_pause','mute','time_and_duration','spacer',
+        'custom_quality','fullscreen'
+      ]
+    });
+
+    // headers (important for streams)
+    player.getNetworkingEngine().registerRequestFilter((type, request) => {
+      request.headers['Referer'] = 'https://fancode.com/';
+    });
+
     await player.load(streamUrl);
-    video.play();
-  } catch (e) {
-    console.error(e);
+
+  } catch(err) {
+    console.log("Fallback video");
     video.src = streamUrl;
     video.play();
   }
 }
 
-init();
+// 🚀 START FLOW (FIXED)
+document.addEventListener('DOMContentLoaded', async () => {
+  await getStream();      // 🔥 get correct stream
+  initializePlayer();     // 🔥 start player
+});
 </script>
 
 </body>
