@@ -9,80 +9,76 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.6/shaka-player.ui.min.js"></script>
 
 <style>
-body {
-  margin: 0;
-  background: #000;
-}
-
-video {
-  width: 100%;
-  height: 100vh;
-  background: #000;
-}
+body { margin:0; background:#000; }
+video { width:100%; height:100vh; background:#000; }
 </style>
 </head>
 
 <body>
 
-<video id="video" autoplay controls></video>
+<video id="video" controls autoplay></video>
 
 <script>
 const DATA_URL = "https://raw.githubusercontent.com/Jitendra-unatti/fancode/refs/heads/main/data/fancode.json";
 
-// Get params
+// URL params
 const params = new URLSearchParams(location.search);
-const matchIdParam = params.get("id") || "";
+const matchParam = params.get("id") || "";
 const quality = params.get("q") || "auto";
 
-// Extract match_id
-const matchId = matchIdParam.split("_")[0];
+// extract match id
+const matchId = matchParam.split("_")[0];
 
-// Init Player
-async function initPlayer() {
+async function init() {
   const video = document.getElementById("video");
+
+  // Create UI
   const ui = video['ui'];
   const controls = ui.getControls();
   const player = controls.getPlayer();
 
-  // Load JSON
-  const res = await fetch(DATA_URL);
-  const data = await res.json();
-
-  const matches = data.matches || [];
-
-  // Find match
-  const match = matches.find(m => String(m.match_id) === String(matchId));
-
-  if (!match || !match.auto_streams || !match.auto_streams.length) {
-    alert("Stream not found");
-    return;
-  }
-
-  let master = match.auto_streams[0].auto;
-
-  let streamUrl = master;
-
-  // If specific quality requested
-  if (quality !== "auto") {
-    const regex = new RegExp(`(https?:\/\/.*${quality}p\\.m3u8)`);
-    const found = master.match(regex);
-    if (found) {
-      streamUrl = found[1];
-    }
-  }
-
-  // Load stream
   try {
-    await player.load(streamUrl);
-    console.log("Loaded:", streamUrl);
-  } catch (e) {
-    console.error("Error loading stream", e);
-    alert("Failed to load stream");
+    const res = await fetch(DATA_URL);
+    const json = await res.json();
+
+    const match = (json.matches || []).find(m => 
+      String(m.match_id) === String(matchId)
+    );
+
+    if (!match) throw "Match not found";
+
+    let master = match.auto_streams?.[0]?.auto;
+    if (!master) throw "Stream missing";
+
+    let finalUrl = master;
+
+    // 🔥 IMPORTANT FIX: extract variant streams properly
+    if (quality !== "auto") {
+      const lines = master.split("\n");
+
+      for (let i = 0; i < lines.length; i++) {
+        if (lines[i].includes(quality + "p")) {
+          finalUrl = lines[i + 1]; // next line is URL
+          break;
+        }
+      }
+    }
+
+    // fallback if not found
+    if (!finalUrl.startsWith("http")) {
+      finalUrl = master;
+    }
+
+    await player.load(finalUrl);
+    console.log("Playing:", finalUrl);
+
+  } catch (err) {
+    console.error(err);
+    alert("Stream failed");
   }
 }
 
-// Shaka ready
-document.addEventListener('shaka-ui-loaded', initPlayer);
+document.addEventListener("shaka-ui-loaded", init);
 </script>
 
 </body>
