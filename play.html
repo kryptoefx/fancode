@@ -1,76 +1,62 @@
-export default {
-  async fetch(request) {
-
-    const JSON_URL = "https://raw.githubusercontent.com/Jitendra-unatti/fancode/refs/heads/main/data/fancode.json";
-
-    let matches = [];
-
-    try {
-      const res = await fetch(JSON_URL);
-      matches = await res.json();
-    } catch (e) {
-      matches = [];
-    }
-
-    const html = `
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>B4X Sports</title>
 
-<title>B4X Sports Live</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="referrer" content="no-referrer">
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.6.0/controls.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.6.0/shaka-player.ui.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.6.0/controls.min.css">
 
 <style>
-body {
-  margin:0;
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
   background:#0c0f14;
-  color:white;
+  color:#fff;
   font-family:Arial;
 }
 
-/* MATCH GRID */
-.header {
+/* HEADER */
+.header{
   padding:15px;
   font-size:20px;
   font-weight:bold;
 }
 
-#matches {
+/* MATCH GRID */
+#matches{
   display:grid;
   grid-template-columns:repeat(2,1fr);
   gap:10px;
   padding:10px;
 }
 
-.card {
+.card{
   background:#1c1c1c;
   border-radius:10px;
   overflow:hidden;
   cursor:pointer;
-  transition:0.3s;
+  transition:.3s;
 }
+.card:hover{transform:scale(1.05)}
 
-.card:hover {
-  transform:scale(1.05);
-}
-
-.card img {
+.card img{
   width:100%;
   height:130px;
   object-fit:cover;
 }
 
-.card p {
+.card p{
   padding:8px;
   font-size:14px;
 }
 
-/* PLAYER FULLSCREEN */
-#playerBox {
+/* PLAYER */
+#playerBox{
   display:none;
   position:fixed;
   inset:0;
@@ -78,49 +64,53 @@ body {
   z-index:9999;
 }
 
-/* CLOSE BTN */
-.closeBtn {
+.shaka-video-container{
+  width:100%;
+  height:100%;
+}
+
+video{
+  width:100%;
+  height:100%;
+}
+
+/* CLOSE */
+.closeBtn{
   position:absolute;
   top:15px;
   right:15px;
   background:red;
-  padding:10px 14px;
+  padding:10px;
   border-radius:6px;
   cursor:pointer;
   z-index:10000;
 }
 
 /* LOADER */
-#loader {
+#loader{
   position:absolute;
   inset:0;
   background:#0c0f14;
   display:flex;
   align-items:center;
   justify-content:center;
-  z-index:9999;
+  z-index:999;
 }
 
-.intro-box {
+.loader-box{
   border-left:5px solid red;
   padding:20px;
+  font-size:18px;
 }
-
 </style>
+
 </head>
 
 <body>
 
 <div class="header">🔥 Live Matches</div>
 
-<div id="matches">
-  ${matches.map(match => `
-    <div class="card" onclick="playVideo('${match.url}')">
-      <img src="${match.image}">
-      <p>${match.title}</p>
-    </div>
-  `).join("")}
-</div>
+<div id="matches">Loading...</div>
 
 <!-- PLAYER -->
 <div id="playerBox">
@@ -128,28 +118,49 @@ body {
   <div class="closeBtn" onclick="closePlayer()">Close</div>
 
   <div id="loader">
-    <div class="intro-box">
-      <h2>STREAM IS LOADING...</h2>
-    </div>
+    <div class="loader-box">STREAM IS LOADING...</div>
   </div>
 
-  <div class="shaka-video-container" style="width:100%;height:100%">
+  <div class="shaka-video-container">
     <video id="video" autoplay playsinline></video>
   </div>
 
 </div>
 
 <script>
+const JSON_URL = "https://raw.githubusercontent.com/Jitendra-unatti/fancode/refs/heads/main/data/fancode.json";
+
 let player;
 
-async function playVideo(url) {
+// LOAD MATCHES
+async function loadMatches(){
+  try{
+    const res = await fetch(JSON_URL);
+    const data = await res.json();
 
-  document.getElementById("playerBox").style.display = "block";
-  document.getElementById("loader").style.display = "flex";
+    const container = document.getElementById("matches");
+
+    container.innerHTML = data.map(match => `
+      <div class="card" onclick="playVideo('${match.url}')">
+        <img src="${match.image}">
+        <p>${match.title}</p>
+      </div>
+    `).join("");
+
+  }catch(e){
+    document.getElementById("matches").innerHTML = "Failed to load matches";
+  }
+}
+
+// PLAY VIDEO
+async function playVideo(url){
+
+  document.getElementById("playerBox").style.display="block";
+  document.getElementById("loader").style.display="flex";
 
   const video = document.getElementById("video");
 
-  if (player) {
+  if(player){
     await player.destroy();
   }
 
@@ -159,53 +170,50 @@ async function playVideo(url) {
   const ui = new shaka.ui.Overlay(player, container, video);
 
   ui.configure({
-    addBigPlayButton: true,
-    controlPanelElements: [
-      'play_pause',
-      'mute',
-      'volume',
-      'time_and_duration',
-      'spacer',
-      'quality',
-      'fullscreen',
-      'overflow_menu'
+    addBigPlayButton:true,
+    controlPanelElements:[
+      "play_pause",
+      "mute",
+      "volume",
+      "time_and_duration",
+      "spacer",
+      "quality",
+      "fullscreen",
+      "overflow_menu"
     ]
   });
 
-  try {
+  try{
     await player.load(url);
-    document.getElementById("loader").style.display = "none";
 
-    // Force highest quality
+    document.getElementById("loader").style.display="none";
+
+    // AUTO BEST QUALITY
     const tracks = player.getVariantTracks();
-    if (tracks.length) {
+    if(tracks.length){
       const sorted = tracks.sort((a,b)=>b.height-a.height);
       player.selectVariantTrack(sorted[0], true);
     }
 
-  } catch (err) {
-    console.log(err);
+    await video.play();
+
+  }catch(e){
+    console.log(e);
     alert("Stream blocked or not working");
   }
 }
 
-function closePlayer() {
-  document.getElementById("playerBox").style.display = "none";
+// CLOSE PLAYER
+function closePlayer(){
+  document.getElementById("playerBox").style.display="none";
   const video = document.getElementById("video");
   video.pause();
-  video.src = "";
+  video.src="";
 }
+
+// INIT
+loadMatches();
 </script>
 
 </body>
 </html>
-`;
-
-    return new Response(html, {
-      headers: {
-        "content-type": "text/html;charset=UTF-8",
-        "Access-Control-Allow-Origin": "*"
-      },
-    });
-  }
-};
