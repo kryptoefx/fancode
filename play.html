@@ -1,85 +1,211 @@
+export default {
+  async fetch(request) {
+
+    const JSON_URL = "https://raw.githubusercontent.com/Jitendra-unatti/fancode/refs/heads/main/data/fancode.json";
+
+    let matches = [];
+
+    try {
+      const res = await fetch(JSON_URL);
+      matches = await res.json();
+    } catch (e) {
+      matches = [];
+    }
+
+    const html = `
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
-<title>Player</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.6/controls.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.6/shaka-player.ui.min.js"></script>
+<title>B4X Sports Live</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.6.0/controls.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.6.0/shaka-player.ui.min.js"></script>
 
 <style>
-body { margin:0; background:#000; }
-video { width:100%; height:100vh; background:#000; }
+body {
+  margin:0;
+  background:#0c0f14;
+  color:white;
+  font-family:Arial;
+}
+
+/* MATCH GRID */
+.header {
+  padding:15px;
+  font-size:20px;
+  font-weight:bold;
+}
+
+#matches {
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+  padding:10px;
+}
+
+.card {
+  background:#1c1c1c;
+  border-radius:10px;
+  overflow:hidden;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.card:hover {
+  transform:scale(1.05);
+}
+
+.card img {
+  width:100%;
+  height:130px;
+  object-fit:cover;
+}
+
+.card p {
+  padding:8px;
+  font-size:14px;
+}
+
+/* PLAYER FULLSCREEN */
+#playerBox {
+  display:none;
+  position:fixed;
+  inset:0;
+  background:black;
+  z-index:9999;
+}
+
+/* CLOSE BTN */
+.closeBtn {
+  position:absolute;
+  top:15px;
+  right:15px;
+  background:red;
+  padding:10px 14px;
+  border-radius:6px;
+  cursor:pointer;
+  z-index:10000;
+}
+
+/* LOADER */
+#loader {
+  position:absolute;
+  inset:0;
+  background:#0c0f14;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+}
+
+.intro-box {
+  border-left:5px solid red;
+  padding:20px;
+}
+
 </style>
 </head>
 
 <body>
 
-<video id="video" controls autoplay></video>
+<div class="header">🔥 Live Matches</div>
+
+<div id="matches">
+  ${matches.map(match => `
+    <div class="card" onclick="playVideo('${match.url}')">
+      <img src="${match.image}">
+      <p>${match.title}</p>
+    </div>
+  `).join("")}
+</div>
+
+<!-- PLAYER -->
+<div id="playerBox">
+
+  <div class="closeBtn" onclick="closePlayer()">Close</div>
+
+  <div id="loader">
+    <div class="intro-box">
+      <h2>STREAM IS LOADING...</h2>
+    </div>
+  </div>
+
+  <div class="shaka-video-container" style="width:100%;height:100%">
+    <video id="video" autoplay playsinline></video>
+  </div>
+
+</div>
 
 <script>
-const DATA_URL = "https://raw.githubusercontent.com/Jitendra-unatti/fancode/refs/heads/main/data/fancode.json";
+let player;
 
-// URL params
-const params = new URLSearchParams(location.search);
-const matchParam = params.get("id") || "";
-const quality = params.get("q") || "auto";
+async function playVideo(url) {
 
-// extract match id
-const matchId = matchParam.split("_")[0];
+  document.getElementById("playerBox").style.display = "block";
+  document.getElementById("loader").style.display = "flex";
 
-async function init() {
   const video = document.getElementById("video");
 
-  // Create UI
-  const ui = video['ui'];
-  const controls = ui.getControls();
-  const player = controls.getPlayer();
+  if (player) {
+    await player.destroy();
+  }
+
+  player = new shaka.Player(video);
+
+  const container = document.querySelector('.shaka-video-container');
+  const ui = new shaka.ui.Overlay(player, container, video);
+
+  ui.configure({
+    addBigPlayButton: true,
+    controlPanelElements: [
+      'play_pause',
+      'mute',
+      'volume',
+      'time_and_duration',
+      'spacer',
+      'quality',
+      'fullscreen',
+      'overflow_menu'
+    ]
+  });
 
   try {
-    const res = await fetch(DATA_URL);
-    const json = await res.json();
+    await player.load(url);
+    document.getElementById("loader").style.display = "none";
 
-    const match = (json.matches || []).find(m => 
-      String(m.match_id) === String(matchId)
-    );
-
-    if (!match) throw "Match not found";
-
-    let master = match.auto_streams?.[0]?.auto;
-    if (!master) throw "Stream missing";
-
-    let finalUrl = master;
-
-    // 🔥 IMPORTANT FIX: extract variant streams properly
-    if (quality !== "auto") {
-      const lines = master.split("\n");
-
-      for (let i = 0; i < lines.length; i++) {
-        if (lines[i].includes(quality + "p")) {
-          finalUrl = lines[i + 1]; // next line is URL
-          break;
-        }
-      }
+    // Force highest quality
+    const tracks = player.getVariantTracks();
+    if (tracks.length) {
+      const sorted = tracks.sort((a,b)=>b.height-a.height);
+      player.selectVariantTrack(sorted[0], true);
     }
-
-    // fallback if not found
-    if (!finalUrl.startsWith("http")) {
-      finalUrl = master;
-    }
-
-    await player.load(finalUrl);
-    console.log("Playing:", finalUrl);
 
   } catch (err) {
-    console.error(err);
-    alert("Stream failed");
+    console.log(err);
+    alert("Stream blocked or not working");
   }
 }
 
-document.addEventListener("shaka-ui-loaded", init);
+function closePlayer() {
+  document.getElementById("playerBox").style.display = "none";
+  const video = document.getElementById("video");
+  video.pause();
+  video.src = "";
+}
 </script>
 
 </body>
 </html>
+`;
+
+    return new Response(html, {
+      headers: {
+        "content-type": "text/html;charset=UTF-8",
+        "Access-Control-Allow-Origin": "*"
+      },
+    });
+  }
+};
