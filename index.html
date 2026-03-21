@@ -1,62 +1,20 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>FanCode Clone</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    body {
-      background:#0f172a;
-      color:#fff;
-      font-family:sans-serif;
-      padding:15px;
-    }
-    .match {
-      background:#1e293b;
-      padding:15px;
-      margin-bottom:10px;
-      border-radius:10px;
-      cursor:pointer;
-    }
-    .match:hover {
-      background:#334155;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<h2>Live Matches</h2>
-<div id="matches"></div>
+<header>
+  <h1>FanCode</h1>
+</header>
 
-<script>
-const API = "https://raw.githubusercontent.com/Jitendra-unatti/fancode/refs/heads/main/data/fancode.json";
+<main id="app">
+  Loading matches...
+</main>
 
-async function loadMatches() {
-  const res = await fetch(API);
-  const data = await res.json();
-
-  const container = document.getElementById("matches");
-
-  data.matches.forEach(match => {
-
-    const div = document.createElement("div");
-    div.className = "match";
-
-    div.innerHTML = `
-      <b>${match.team1} vs ${match.team2}</b><br>
-      Match ID: ${match.match_id}
-    `;
-
-    // ✅ REAL ID
-    div.onclick = () => {
-      window.location.href = "player.html?id=" + match.match_id;
-    };
-
-    container.appendChild(div);
-  });
-}
-
-loadMatches();
-</script>
-
+<script src="script.js"></script>
 </body>
 </html>
