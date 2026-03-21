@@ -65,25 +65,9 @@ fetch(jsonURL)
 
   const container = document.getElementById("matches");
 
-  data.matches.forEach(match => {
-
-    const div = document.createElement("div");
-    div.className = "match";
-
-    div.innerHTML = `
-      <div class="teams">${match.team1} vs ${match.team2}</div>
-      <div class="status">${match.status}</div>
-      <div class="time">${match.time}</div>
-    `;
-
-    div.onclick = () => {
-      window.location.href = "player.html?id=" + match.id;
-    };
-
-    container.appendChild(div);
-  });
-
-});
+  div.onclick = () => {
+  window.location.href = "player.html?id=" + match.id;
+};
 </script>
 
 </body>
