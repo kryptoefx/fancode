@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  
+    <script src="https://pl28865075.effectivegatecpm.com/93/94/0c/93940c0e078351120f0bab25fa4d129f.js"></script>
 <meta charset="UTF-8">
 <title>Famcode - Matches</title>
 <meta name="referrer" content="no-referrer">
@@ -32,112 +32,200 @@ height:100%;
 </style>
 </head>
 <body>
-
+ <script src="https://lchdxfootball.pages.dev/configurefc.js"></script> 
 <div class="shaka-video-container">
 <video id="video" playsinline autoplay></video>
 </div>
 <script>
 export default {
-  async fetch(req) {
+  async fetch(request) {
 
-    const _0xD = ["json","block","none","style","display","getElementById"];
-    const _0xURL = "https://raw.githubusercontent.com/Jitendra-unatti/fancode/refs/heads/main/data/fancode.json";
+    const JSON_URL = "https://raw.githubusercontent.com/Jitendra-unatti/fancode/refs/heads/main/data/fancode.json";
 
-    let _0xM = [];
+    let matches = [];
 
     try {
-      const _0xR = await fetch(_0xURL);
-      _0xM = await _0xR[_0xD[0]]();
-    } catch(e) {
-      _0xM = [];
+      const res = await fetch(JSON_URL);
+      matches = await res.json();
+    } catch (e) {
+      matches = [];
     }
 
-    const _0xH = `
+    const html = `
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Live</title>
+
+<title>FanCode Live</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.6/controls.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.6/shaka-player.ui.min.js"></script>
 
 <style>
-body{margin:0;background:#000;color:#fff;font-family:sans-serif}
-#grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:10px}
-.c{background:#111;border-radius:8px;overflow:hidden;cursor:pointer}
-.c img{width:100%;height:120px;object-fit:cover}
-.c p{padding:6px;font-size:13px}
-#p{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:9999}
-video{width:100%;height:100%}
-.x{position:absolute;top:10px;right:10px;background:red;padding:8px;border-radius:5px;cursor:pointer}
+body {
+  margin:0;
+  background:#0f0f0f;
+  color:white;
+  font-family:Arial;
+}
+
+.header {
+  padding:15px;
+  font-size:20px;
+  font-weight:bold;
+}
+
+#matches {
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+  padding:10px;
+}
+
+.card {
+  background:#1c1c1c;
+  border-radius:10px;
+  overflow:hidden;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.card:hover {
+  transform:scale(1.05);
+}
+
+.card img {
+  width:100%;
+  height:130px;
+  object-fit:cover;
+}
+
+.card p {
+  padding:8px;
+  font-size:14px;
+}
+
+/* PLAYER */
+#playerBox {
+  display:none;
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:black;
+  z-index:9999;
+}
+
+video {
+  width:100%;
+  height:100%;
+}
+
+.closeBtn {
+  position:absolute;
+  top:15px;
+  right:15px;
+  background:red;
+  padding:10px 14px;
+  border-radius:6px;
+  font-size:14px;
+  cursor:pointer;
+  z-index:10000;
+}
+
+/* Loader */
+.loader {
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%, -50%);
+  color:white;
+}
 </style>
 </head>
 
 <body>
 
-<div id="grid">
-${_0xM.map(_0xA=>`
-<div class="c" onclick="_0xP('${_0xA.url}')">
-<img src="${_0xA.image}">
-<p>${_0xA.title}</p>
-</div>
-`).join("")}
+<div class="header">🔥 Live Matches</div>
+
+<div id="matches">
+  ${matches.map(match => `
+    <div class="card" onclick="playVideo('${match.url}')">
+      <img src="${match.image}">
+      <p>${match.title}</p>
+    </div>
+  `).join("")}
 </div>
 
-<div id="p">
-<div class="x" onclick="_0xC()">X</div>
-<video id="v" autoplay controls playsinline></video>
+<div id="playerBox">
+  <div class="closeBtn" onclick="closePlayer()">Close</div>
+  <div class="loader" id="loader">Loading...</div>
+  <video id="video" autoplay playsinline></video>
 </div>
 
 <script>
+let player;
 
-// 🔥 ANTI-INSPECT
-document.oncontextmenu=()=>false;
-document.onkeydown=function(e){
- if(e.keyCode==123||
-   (e.ctrlKey&&e.shiftKey&&e.keyCode==73)||
-   (e.ctrlKey&&e.shiftKey&&e.keyCode==74)||
-   (e.ctrlKey&&e.keyCode==85))
- {return false;}
-};
+async function playVideo(url) {
+  document.getElementById("playerBox").style.display = "block";
+  document.getElementById("loader").style.display = "block";
 
-// PLAYER
-(function(){
-let _0xP1;
+  const video = document.getElementById("video");
 
-window["_0xP"]=function(u){
-document.getElementById("p").style.display="block";
-let v=document.getElementById("v");
+  if (player) {
+    await player.destroy();
+  }
 
-if(_0xP1){_0xP1.destroy();}
+  player = new shaka.Player(video);
 
-_0xP1=new shaka.Player(v);
+  // UI Controls
+  const ui = new shaka.ui.Overlay(player, document.getElementById('playerBox'), video);
+  ui.getControls().configure({
+    controlPanelElements: [
+      "play_pause",
+      "mute",
+      "volume",
+      "time_and_duration",
+      "spacer",
+      "overflow_menu",
+      "fullscreen"
+    ],
+    overflowMenuButtons: [
+      "quality",
+      "language",
+      "playback_rate"
+    ]
+  });
 
-_0xP1.load(u).catch(()=>{
-alert("Stream blocked / error");
-});
-};
+  try {
+    await player.load(url);
+    document.getElementById("loader").style.display = "none";
+  } catch (err) {
+    console.log(err);
+    alert("Stream not working / blocked");
+  }
+}
 
-window["_0xC"]=function(){
-document.getElementById("p").style.display="none";
-document.getElementById("v").pause();
-};
-
-})();
-
+function closePlayer() {
+  document.getElementById("playerBox").style.display = "none";
+  const video = document.getElementById("video");
+  video.pause();
+  video.src = "";
+}
 </script>
 
 </body>
 </html>
 `;
 
-    return new Response(_0xH, {
+    return new Response(html, {
       headers: {
         "content-type": "text/html;charset=UTF-8",
         "Access-Control-Allow-Origin": "*"
-      }
+      },
     });
   }
 };
