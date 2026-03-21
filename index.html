@@ -1,53 +1,84 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <title>Matches</title>
+<meta charset="UTF-8">
+<title>Live Matches</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial;
-      background: #0f172a;
-      color: white;
-    }
+<style>
+body {
+  margin: 0;
+  font-family: system-ui;
+  background: #0b0f1a;
+  color: white;
+}
 
-    .header {
-      padding: 15px;
-      font-size: 22px;
-      font-weight: bold;
-      background: #020617;
-      text-align: center;
-    }
+.header {
+  padding: 15px;
+  font-size: 20px;
+  font-weight: bold;
+  background: #020617;
+  text-align: center;
+}
 
-    .container {
-      padding: 10px;
-    }
+.container {
+  padding: 10px;
+}
 
-    .match {
-      background: #1e293b;
-      padding: 12px;
-      margin-bottom: 10px;
-      border-radius: 10px;
-      cursor: pointer;
-    }
+.match {
+  background: linear-gradient(145deg,#111827,#1f2937);
+  border-radius: 12px;
+  padding: 15px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: 0.2s;
+}
 
-    .teams {
-      font-size: 16px;
-      font-weight: bold;
-    }
+.match:hover {
+  transform: scale(1.02);
+}
 
-    .status {
-      font-size: 12px;
-      color: #22c55e;
-      margin-top: 5px;
-    }
+.teams {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
-    .time {
-      font-size: 12px;
-      color: #94a3b8;
-    }
-  </style>
+.team {
+  text-align: center;
+  width: 40%;
+}
+
+.vs {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.name {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.status {
+  margin-top: 8px;
+  font-size: 12px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.live {
+  color: red;
+  font-weight: bold;
+}
+
+.upcoming {
+  color: #22c55e;
+}
+
+.time {
+  color: #9ca3af;
+}
+</style>
 </head>
 
 <body>
@@ -65,9 +96,43 @@ fetch(jsonURL)
 
   const container = document.getElementById("matches");
 
-  div.onclick = () => {
-  window.location.href = "player.html?id=" + match.id;
-};
+  data.matches.forEach((match, index) => {
+
+    const div = document.createElement("div");
+    div.className = "match";
+
+    const isLive = match.status.toLowerCase().includes("live");
+
+    div.innerHTML = `
+      <div class="teams">
+        <div class="team">
+          <div class="name">${match.team1}</div>
+        </div>
+
+        <div class="vs">VS</div>
+
+        <div class="team">
+          <div class="name">${match.team2}</div>
+        </div>
+      </div>
+
+      <div class="status">
+        <div class="${isLive ? 'live' : 'upcoming'}">
+          ${isLive ? '🔴 LIVE' : '🟢 UPCOMING'}
+        </div>
+        <div class="time">${match.time}</div>
+      </div>
+    `;
+
+    // 🔥 FIXED CLICK (NO UNDEFINED ERROR)
+    div.onclick = () => {
+      window.location.href = "player.html?id=" + index;
+    };
+
+    container.appendChild(div);
+  });
+
+});
 </script>
 
 </body>
