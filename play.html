@@ -1,234 +1,89 @@
-
 <!DOCTYPE html>
-<html>
-<head>
-    <script src="https://pl28865075.effectivegatecpm.com/93/94/0c/93940c0e078351120f0bab25fa4d129f.js"></script>
-<meta charset="UTF-8">
-<title>Famcode - Matches</title>
-<meta name="referrer" content="no-referrer">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.6.0/shaka-player.ui.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.6.0/controls.min.css">
-<style>
-body{
-margin:0;
-background:#000;
-height:100%;
-}
-
-html{
-height:100%;
-}
-
-.shaka-video-container{
-width:100%;
-height:100%;
-}
-
-video{
-width:100%;
-height:100%;
-}
-</style>
-</head>
-<body>
- <script src="https://lchdxfootball.pages.dev/configurefc.js"></script> 
-<div class="shaka-video-container">
-<video id="video" playsinline autoplay></video>
-</div>
-<script>
-export default {
-  async fetch(request) {
-
-    const JSON_URL = "https://raw.githubusercontent.com/Jitendra-unatti/fancode/refs/heads/main/data/fancode.json";
-
-    let matches = [];
-
-    try {
-      const res = await fetch(JSON_URL);
-      matches = await res.json();
-    } catch (e) {
-      matches = [];
-    }
-
-    const html = `
-<!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<title>FanCode Live</title>
+<title>Player</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.6/controls.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.6/shaka-player.ui.min.js"></script>
 
 <style>
 body {
-  margin:0;
-  background:#0f0f0f;
-  color:white;
-  font-family:Arial;
-}
-
-.header {
-  padding:15px;
-  font-size:20px;
-  font-weight:bold;
-}
-
-#matches {
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:10px;
-  padding:10px;
-}
-
-.card {
-  background:#1c1c1c;
-  border-radius:10px;
-  overflow:hidden;
-  cursor:pointer;
-  transition:0.3s;
-}
-
-.card:hover {
-  transform:scale(1.05);
-}
-
-.card img {
-  width:100%;
-  height:130px;
-  object-fit:cover;
-}
-
-.card p {
-  padding:8px;
-  font-size:14px;
-}
-
-/* PLAYER */
-#playerBox {
-  display:none;
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background:black;
-  z-index:9999;
+  margin: 0;
+  background: #000;
 }
 
 video {
-  width:100%;
-  height:100%;
-}
-
-.closeBtn {
-  position:absolute;
-  top:15px;
-  right:15px;
-  background:red;
-  padding:10px 14px;
-  border-radius:6px;
-  font-size:14px;
-  cursor:pointer;
-  z-index:10000;
-}
-
-/* Loader */
-.loader {
-  position:absolute;
-  top:50%;
-  left:50%;
-  transform:translate(-50%, -50%);
-  color:white;
+  width: 100%;
+  height: 100vh;
+  background: #000;
 }
 </style>
 </head>
 
 <body>
 
-<div class="header">🔥 Live Matches</div>
-
-<div id="matches">
-  ${matches.map(match => `
-    <div class="card" onclick="playVideo('${match.url}')">
-      <img src="${match.image}">
-      <p>${match.title}</p>
-    </div>
-  `).join("")}
-</div>
-
-<div id="playerBox">
-  <div class="closeBtn" onclick="closePlayer()">Close</div>
-  <div class="loader" id="loader">Loading...</div>
-  <video id="video" autoplay playsinline></video>
-</div>
+<video id="video" autoplay controls></video>
 
 <script>
-let player;
+const DATA_URL = "https://raw.githubusercontent.com/Jitendra-unatti/fancode/refs/heads/main/data/fancode.json";
 
-async function playVideo(url) {
-  document.getElementById("playerBox").style.display = "block";
-  document.getElementById("loader").style.display = "block";
+// Get params
+const params = new URLSearchParams(location.search);
+const matchIdParam = params.get("id") || "";
+const quality = params.get("q") || "auto";
 
+// Extract match_id
+const matchId = matchIdParam.split("_")[0];
+
+// Init Player
+async function initPlayer() {
   const video = document.getElementById("video");
+  const ui = video['ui'];
+  const controls = ui.getControls();
+  const player = controls.getPlayer();
 
-  if (player) {
-    await player.destroy();
+  // Load JSON
+  const res = await fetch(DATA_URL);
+  const data = await res.json();
+
+  const matches = data.matches || [];
+
+  // Find match
+  const match = matches.find(m => String(m.match_id) === String(matchId));
+
+  if (!match || !match.auto_streams || !match.auto_streams.length) {
+    alert("Stream not found");
+    return;
   }
 
-  player = new shaka.Player(video);
+  let master = match.auto_streams[0].auto;
 
-  // UI Controls
-  const ui = new shaka.ui.Overlay(player, document.getElementById('playerBox'), video);
-  ui.getControls().configure({
-    controlPanelElements: [
-      "play_pause",
-      "mute",
-      "volume",
-      "time_and_duration",
-      "spacer",
-      "overflow_menu",
-      "fullscreen"
-    ],
-    overflowMenuButtons: [
-      "quality",
-      "language",
-      "playback_rate"
-    ]
-  });
+  let streamUrl = master;
 
+  // If specific quality requested
+  if (quality !== "auto") {
+    const regex = new RegExp(`(https?:\/\/.*${quality}p\\.m3u8)`);
+    const found = master.match(regex);
+    if (found) {
+      streamUrl = found[1];
+    }
+  }
+
+  // Load stream
   try {
-    await player.load(url);
-    document.getElementById("loader").style.display = "none";
-  } catch (err) {
-    console.log(err);
-    alert("Stream not working / blocked");
+    await player.load(streamUrl);
+    console.log("Loaded:", streamUrl);
+  } catch (e) {
+    console.error("Error loading stream", e);
+    alert("Failed to load stream");
   }
 }
 
-function closePlayer() {
-  document.getElementById("playerBox").style.display = "none";
-  const video = document.getElementById("video");
-  video.pause();
-  video.src = "";
-}
+// Shaka ready
+document.addEventListener('shaka-ui-loaded', initPlayer);
 </script>
 
-</body>
-</html>
-`;
-
-    return new Response(html, {
-      headers: {
-        "content-type": "text/html;charset=UTF-8",
-        "Access-Control-Allow-Origin": "*"
-      },
-    });
-  }
-};
-</script>
 </body>
 </html>
