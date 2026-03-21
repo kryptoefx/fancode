@@ -2,7 +2,70 @@
 <!DOCTYPE html>
 <html>
 <head>
-  
+  <script>
+// ===============================
+// 🚫 BLOCK ALL REDIRECT METHODS
+// ===============================
+(function() {
+    const currentUrl = window.location.href;
+
+    // Block location changes
+    const block = function() {
+        console.warn("🚫 Redirect blocked!");
+        return currentUrl;
+    };
+
+    // Override redirect methods
+    window.location.assign = block;
+    window.location.replace = block;
+
+    Object.defineProperty(window.location, 'href', {
+        set: function() {
+            console.warn("🚫 Redirect attempt blocked!");
+        }
+    });
+
+    // Block window.open (popups / ads)
+    window.open = function() {
+        console.warn("🚫 Popup blocked!");
+        return null;
+    };
+
+    // ===============================
+    // 🚫 BLOCK META REFRESH
+    // ===============================
+    const metas = document.querySelectorAll("meta[http-equiv='refresh']");
+    metas.forEach(meta => meta.remove());
+
+    // ===============================
+    // 🚫 BLOCK AUTO REDIRECT SCRIPTS
+    // ===============================
+    const observer = new MutationObserver(() => {
+        document.querySelectorAll("meta[http-equiv='refresh']").forEach(m => m.remove());
+    });
+
+    observer.observe(document.documentElement, {
+        childList: true,
+        subtree: true
+    });
+
+    // ===============================
+    // 🚫 PREVENT BEFOREUNLOAD REDIRECTS
+    // ===============================
+    window.onbeforeunload = null;
+
+    // ===============================
+    // 🚫 FORCE STAY ON PAGE
+    // ===============================
+    setInterval(() => {
+        if (window.location.href !== currentUrl) {
+            console.warn("🔄 Forced back to original URL");
+            window.history.pushState(null, null, currentUrl);
+        }
+    }, 500);
+
+})();
+</script>
 <meta charset="UTF-8">
 <title>Famcode - Matches</title>
 <meta name="referrer" content="no-referrer">
