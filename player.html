@@ -40,7 +40,7 @@ async function getStream() {
   const res = await fetch(jsonURL);
   const data = await res.json();
 
-  const match = data.matches.find(m => m.id == matchId);
+const match = data.matches[matchId];
 
   if (!match) {
     alert("Match not found");
