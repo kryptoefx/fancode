@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Matches</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial;
+      background: #0f172a;
+      color: white;
+    }
+
+    .header {
+      padding: 15px;
+      font-size: 22px;
+      font-weight: bold;
+      background: #020617;
+      text-align: center;
+    }
+
+    .container {
+      padding: 10px;
+    }
+
+    .match {
+      background: #1e293b;
+      padding: 12px;
+      margin-bottom: 10px;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    .teams {
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    .status {
+      font-size: 12px;
+      color: #22c55e;
+      margin-top: 5px;
+    }
+
+    .time {
+      font-size: 12px;
+      color: #94a3b8;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="header">🔥 Live Matches</div>
+
+<div class="container" id="matches"></div>
+
+<script>
+const jsonURL = "https://raw.githubusercontent.com/Jitendra-unatti/fancode/refs/heads/main/data/fancode.json";
+
+fetch(jsonURL)
+.then(res => res.json())
+.then(data => {
+
+  const container = document.getElementById("matches");
+
+  data.matches.forEach(match => {
+
+    const div = document.createElement("div");
+    div.className = "match";
+
+    div.innerHTML = `
+      <div class="teams">${match.team1} vs ${match.team2}</div>
+      <div class="status">${match.status}</div>
+      <div class="time">${match.time}</div>
+    `;
+
+    div.onclick = () => {
+      window.location.href = "player.html?id=" + match.id;
+    };
+
+    container.appendChild(div);
+  });
+
+});
+</script>
+
+</body>
+</html>
