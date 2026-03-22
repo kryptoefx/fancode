@@ -1,6 +1,7 @@
 const DOMAIN_CONFIG = {
     allowedDomains: [
-        
+        "b4xsports.gamesaved.xyz"
+        "gamesaved.xyz"
         "kryptoefx.github.io"
     ]
 };
