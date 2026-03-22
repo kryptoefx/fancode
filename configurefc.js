@@ -1,7 +1,6 @@
 const DOMAIN_CONFIG = {
     allowedDomains: [
-        "famcodexweb.pages.dev",
-        "famcodexwebs.pages.dev"
+        
         "kryptoefx.github.io"
     ]
 };
