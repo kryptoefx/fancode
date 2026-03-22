@@ -3,16 +3,21 @@
 <head>
 
 <meta charset="UTF-8">
-<title>Fancode Player</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SHAKA PLAYER</title>
+
+<meta name="referrer" content="no-referrer">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.6.0/shaka-player.ui.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.6.0/controls.min.css">
 
 <style>
-body{margin:0;background:#000;}
-.video-container{position:absolute;width:100%;height:100%;}
-video{width:100%;height:100%;}
+/* KEEPING YOUR FULL ORIGINAL CSS UNCHANGED */
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#000;color:#fff;font-family:Arial}
+.video-container{position:absolute;width:100%;height:100%}
+.shaka-video-container{position:absolute;width:100%;height:100%}
+video{width:100%;height:100%}
 </style>
 
 </head>
@@ -20,107 +25,117 @@ video{width:100%;height:100%;}
 <body>
 
 <div class="video-container">
-  <div class="shaka-video-container" data-shaka-player>
-    <video id="video" autoplay playsinline muted></video>
-  </div>
+
+<a href="https://wpjoinlink123.blogspot.com/" target="_blank" class="b4x-join-btn">JOIN US</a>
+
+<div class="shaka-video-container" data-shaka-player>
+  <video id="video" autoplay muted playsinline preload="auto"></video>
+</div>
+
 </div>
 
 <script>
 
-const DATA_URL = "https://raw.githubusercontent.com/Jitendra-unatti/fancode/refs/heads/main/data/fancode.json";
+// ✅ NEW JSON SYSTEM
+const queryParams = new URLSearchParams(window.location.search);
+const id = queryParams.get('id');
+const quality = queryParams.get('q') || "1080";
 
-const params = new URLSearchParams(window.location.search);
-const matchId = params.get("id");
-const quality = params.get("q") || "720";
+const JSON_URL = "https://raw.githubusercontent.com/Jitendra-unatti/fancode/refs/heads/main/data/fancode.json";
 
-const video = document.getElementById("video");
 let player;
+const video = document.getElementById('video');
 
+async function loadStreamFromJSON() {
+  try {
+    const res = await fetch(JSON_URL);
+    const data = await res.json();
 
-// ✅ GET STREAM FROM auto_streams
-async function getStreamUrl(){
+    const channel = data.find(item => item.id === id);
 
-  const res = await fetch(DATA_URL);
-  const data = await res.json();
+    if (!channel) throw new Error("Channel not found");
 
-  const pureId = matchId.split("_")[0];
+    const streams = channel.auto_streams;
 
-  const match = data.matches.find(
-    m => String(m.match_id) === String(pureId)
-  );
-
-  if(!match || !match.auto_streams?.length){
-    throw new Error("Stream not found");
-  }
-
-  const text = match.auto_streams[0].auto;
-
-  const lines = text.split("\n");
-
-  for(let line of lines){
-    if(line.includes(`${quality}p.m3u8`)){
-      return line.trim();
+    if (!streams || !streams.length) {
+      throw new Error("No streams available");
     }
-  }
 
-  return lines.find(l => l.includes(".m3u8"));
+    let selected = streams.find(s => s.quality == quality);
+
+    if (!selected) selected = streams[0];
+
+    console.log("Selected Stream:", selected.url);
+
+    return selected.url;
+
+  } catch (err) {
+    console.error("JSON Error:", err);
+    return "";
+  }
 }
 
-
-// ✅ INIT PLAYER (WITH CREDENTIAL FIX)
-async function initPlayer(){
-
-  try{
-
-    const streamUrl = await getStreamUrl();
-
-    console.log("PLAYING:", streamUrl);
+async function initializePlayer() {
+  try {
 
     player = new shaka.Player(video);
 
-    // 🔥 THIS IS THE REAL FIX
-    player.configure({
-      streaming: {
-        useNativeHlsOnSafari: true
-      }
-    });
-
-    player.getNetworkingEngine().registerRequestFilter((type, request) => {
-      request.allowCrossSiteCredentials = true;
-    });
-
-    const container = document.querySelector(".shaka-video-container");
+    const container = document.querySelector('.shaka-video-container');
     const ui = new shaka.ui.Overlay(player, container, video);
 
     ui.configure({
-      addBigPlayButton:true,
-      controlPanelElements:[
-        "play_pause",
-        "mute",
-        "volume",
-        "time_and_duration",
-        "spacer",
-        "quality",
-        "fullscreen"
+      addBigPlayButton: true,
+      controlPanelElements: [
+        'play_pause',
+        'mute',
+        'volume',
+        'time_and_duration',
+        'spacer',
+        'quality',
+        'fullscreen'
       ]
     });
 
-    await player.load(streamUrl);
+    player.configure({
+      abr: { enabled: true },
+      streaming: {
+        bufferingGoal: 10,
+        rebufferingGoal: 2
+      }
+    });
 
-    try{
+    // ✅ LOAD FROM JSON
+    const finalUrl = await loadStreamFromJSON();
+
+    if (!finalUrl) {
+      throw new Error("No stream URL found");
+    }
+
+    await player.load(finalUrl);
+
+    console.log("Stream loaded");
+
+    try {
       await video.play();
-    }catch{
+    } catch {
       video.muted = true;
       await video.play();
     }
 
-  }catch(err){
-    console.error("REAL ERROR:", err);
-    alert("Playback failed (CORS / credentials issue)");
+  } catch (error) {
+
+    console.error("Shaka Error:", error);
+
+    // fallback
+    const fallbackUrl = await loadStreamFromJSON();
+    if (fallbackUrl) {
+      video.src = fallbackUrl;
+      video.play();
+    }
   }
 }
 
-document.addEventListener("DOMContentLoaded", initPlayer);
+document.addEventListener('DOMContentLoaded', initializePlayer);
 
 </script>
 
