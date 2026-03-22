@@ -1,4 +1,190 @@
-<script>
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Player</title>
+  <meta name="referrer" content="no-referrer">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.6.0/shaka-player.ui.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.6.0/controls.min.css">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html,body { background:#000; width:100%; height:100%; font-family:system-ui,sans-serif; }
+    body { position:absolute; color:#fff; display:flex; justify-content:center; align-items:flex-start; }
+    .video-container { position:absolute; width:100%; height:100%; aspect-ratio:16/9; background:#000; overflow:hidden; }
+    .shaka-video-container { position:absolute; width:100%; height:100%; }
+    video { width:100%; height:100%; background:#000; }
+    .shaka-spinner-container,.shaka-spinner,.shaka-spinner-svg { display:none !important; }
+
+    /* TG badge */
+    #tg-badge {
+      position:absolute; top:12px; right:12px; z-index:800;
+      display:flex; align-items:center; gap:6px;
+      background:#229ED9; color:#fff;
+      font-size:13px; font-weight:600;
+      padding:5px 10px 5px 8px; border-radius:6px;
+      cursor:pointer; text-decoration:none;
+      font-family:system-ui,sans-serif;
+      box-shadow:0 2px 8px rgba(0,0,0,0.4);
+      transition:opacity 0.2s;
+    }
+    #tg-badge:hover { opacity:0.85; }
+    #tg-badge svg { width:18px; height:18px; }
+
+    /* TG popup */
+    #tg-overlay {
+      position:absolute; inset:0;
+      background:rgba(0,0,0,0.72);
+      z-index:1000;
+      display:flex; justify-content:center; align-items:center;
+    }
+    #tg-overlay.hidden { display:none; }
+    #tg-popup {
+      background:linear-gradient(145deg,#1a7ab5,#229ED9);
+      border-radius:18px; padding:32px 28px 24px;
+      width:320px; max-width:90%;
+      text-align:center; position:relative;
+      box-shadow:0 8px 32px rgba(0,0,0,0.6);
+      font-family:system-ui,sans-serif; color:#fff;
+    }
+    #tg-close {
+      position:absolute; top:12px; right:14px;
+      background:rgba(255,255,255,0.2); border:none; color:#fff;
+      width:28px; height:28px; border-radius:50%;
+      cursor:pointer; font-size:15px;
+      display:flex; align-items:center; justify-content:center;
+    }
+    #tg-close:hover { background:rgba(255,255,255,0.35); }
+    .tg-icon-wrap {
+      width:60px; height:60px;
+      background:rgba(255,255,255,0.2); border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      margin:0 auto 16px;
+    }
+    .tg-icon-wrap svg { width:34px; height:34px; }
+    #tg-popup h2 { font-size:22px; font-weight:700; margin-bottom:8px; }
+    #tg-popup p  { font-size:14px; opacity:0.9; margin-bottom:6px; }
+    #tg-popup .handle { font-size:14px; opacity:0.85; margin-bottom:20px; }
+    .tg-join {
+      display:block; width:100%;
+      background:#fff; color:#1a7ab5;
+      font-weight:700; font-size:15px;
+      padding:13px; border-radius:10px;
+      text-decoration:none; letter-spacing:0.5px;
+      margin-bottom:10px;
+    }
+    .tg-join:hover { background:#e8f4fd; }
+    .tg-later {
+      background:rgba(255,255,255,0.18); border:none; color:#fff;
+      font-size:14px; padding:10px 24px; border-radius:8px;
+      cursor:pointer; font-family:system-ui,sans-serif;
+    }
+    .tg-later:hover { background:rgba(255,255,255,0.28); }
+
+    /* Quality button */
+    .custom-quality-btn {
+      background:none; border:none; color:#EEE;
+      font-size:12px; font-weight:500; cursor:pointer;
+      padding:3px 8px; height:60px;
+      display:flex; align-items:center; gap:3px;
+      font-family:system-ui,sans-serif; white-space:nowrap;
+    }
+    .custom-quality-btn:hover { color:#fff; }
+    .custom-quality-menu {
+      display:none; position:absolute; bottom:64px; right:0;
+      background:rgba(28,28,28,0.95); border-radius:2px;
+      min-width:120px; padding:6px 0; z-index:9999;
+      box-shadow:0 4px 12px rgba(0,0,0,0.6);
+    }
+    .custom-quality-menu.open { display:block; }
+    .custom-quality-menu div {
+      padding:10px 16px; font-size:13px; color:#EEE; cursor:pointer;
+      display:flex; justify-content:space-between; align-items:center;
+    }
+    .custom-quality-menu div:hover { background:rgba(255,255,255,0.1); color:#fff; }
+    .custom-quality-menu div.selected::after { content:"✓"; color:#aaa; font-size:12px; }
+
+    /* Shaka YouTube theme */
+    .youtube-theme .shaka-bottom-controls { width:100%; padding:0; display:flex; flex-direction:column; z-index:1; }
+    .youtube-theme .shaka-ad-controls { order:1; }
+    .youtube-theme .shaka-controls-button-panel { order:2; height:60px; padding:0 10px; }
+    .youtube-theme .shaka-range-container { margin:4px 10px; top:0; }
+    .youtube-theme .shaka-small-play-button { order:-3; }
+    .youtube-theme .shaka-mute-button { order:-2; }
+    .youtube-theme .shaka-controls-button-panel > * { margin:0; padding:3px 8px; color:#EEE; height:60px; }
+    .youtube-theme .shaka-controls-button-panel > *:focus { outline:none; box-shadow:inset 0 0 0 2px rgba(27,127,204,0.8); color:#FFF; }
+    .youtube-theme .shaka-controls-button-panel > *:hover { color:#FFF; }
+    .youtube-theme .shaka-controls-button-panel .shaka-volume-bar-container { position:relative; z-index:10; left:-1px; order:-1; opacity:0; width:0; height:3px; transition:width 0.2s cubic-bezier(0.4,0,1,1); padding:0; }
+    .youtube-theme .shaka-controls-button-panel .shaka-volume-bar-container:hover,
+    .youtube-theme .shaka-controls-button-panel .shaka-volume-bar-container:focus { display:block; width:50px; opacity:1; padding:0 6px; }
+    .youtube-theme .shaka-mute-button:hover + div { opacity:1; width:50px; padding:0 6px; }
+    .youtube-theme .shaka-current-time { padding:0 10px; font-size:12px; }
+    .youtube-theme .shaka-seek-bar-container { height:3px; position:relative; top:-1px; border-radius:0; margin-bottom:0; }
+    .youtube-theme .shaka-seek-bar-container .shaka-range-element { opacity:0; }
+    .youtube-theme .shaka-seek-bar-container:hover { height:5px; top:0; cursor:pointer; }
+    .youtube-theme .shaka-seek-bar-container:hover .shaka-range-element { opacity:1; cursor:pointer; }
+    .youtube-theme .shaka-seek-bar-container input[type=range]::-webkit-slider-thumb { background:#F00; cursor:pointer; }
+    .youtube-theme .shaka-seek-bar-container input[type=range]::-moz-range-thumb    { background:#F00; cursor:pointer; }
+    .youtube-theme .shaka-seek-bar-container input[type=range]::-ms-thumb           { background:#F00; cursor:pointer; }
+    .youtube-theme .shaka-video-container * { font-family:system-ui,sans-serif; }
+    .youtube-theme .shaka-overflow-menu,.youtube-theme .shaka-settings-menu { border-radius:2px; background:rgba(28,28,28,0.9); transition:opacity 0.1s; user-select:none; right:10px; bottom:50px; padding:8px 0; min-width:200px; }
+    .youtube-theme .shaka-settings-menu { padding:0 0 8px; }
+    .youtube-theme .shaka-settings-menu button { font-size:12px; }
+    .youtube-theme .shaka-settings-menu button span { margin-left:33px; font-size:13px; }
+    .youtube-theme .shaka-settings-menu button[aria-selected="true"] { display:flex; }
+    .youtube-theme .shaka-settings-menu button[aria-selected="true"] span { order:2; margin-left:0; }
+    .youtube-theme .shaka-settings-menu button[aria-selected="true"] i { order:1; font-size:18px; padding-left:5px; }
+    .youtube-theme .shaka-overflow-menu button { padding:0; }
+    .youtube-theme .shaka-overflow-menu button i { display:none; }
+    .youtube-theme .shaka-overflow-menu button .shaka-overflow-button-label { display:flex; justify-content:space-between; align-items:center; cursor:default; outline:none; height:60px; flex:0 0 100%; }
+    .youtube-theme .shaka-overflow-menu button .shaka-overflow-button-label span { flex-shrink:initial; padding-left:15px; font-size:13px; font-weight:500; display:flex; align-items:center; }
+    .youtube-theme .shaka-overflow-menu span+span { color:#FFF; font-weight:400 !important; font-size:12px !important; padding-right:8px; padding-left:0 !important; }
+    .youtube-theme .shaka-overflow-menu span+span::after { content:"navigate_next"; font-family:'Material Icons Sharp'; font-size:20px; }
+    .youtube-theme .shaka-overflow-menu .shaka-pip-button span+span { padding-right:15px !important; }
+    .youtube-theme .shaka-overflow-menu .shaka-pip-button span+span::after { content:""; }
+    .youtube-theme .shaka-back-to-overflow-button { padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.2); font-size:12px; color:#eee; height:60px; }
+    .youtube-theme .shaka-back-to-overflow-button .material-icons-round { font-size:15px; padding-right:10px; }
+    .youtube-theme .shaka-back-to-overflow-button span { margin-left:3px !important; }
+    .youtube-theme .shaka-overflow-menu button:hover,.youtube-theme .shaka-settings-menu button:hover { background-color:rgba(255,255,255,0.1); cursor:pointer; }
+    .youtube-theme .shaka-overflow-menu button:hover label,.youtube-theme .shaka-settings-menu button:hover label { cursor:pointer; }
+    .youtube-theme .shaka-overflow-menu button:focus,.youtube-theme .shaka-settings-menu button:focus { background-color:rgba(255,255,255,0.1); border:none; outline:none; }
+    .youtube-theme .shaka-overflow-menu button,.youtube-theme .shaka-settings-menu button { color:#EEE; }
+    .youtube-theme .shaka-captions-off { color:#BFBFBF; }
+    .youtube-theme .shaka-overflow-menu-button { font-size:18px; margin-right:5px; }
+    .youtube-theme .shaka-fullscreen-button:hover { font-size:25px; transition:font-size 0.1s cubic-bezier(0,0,0.2,1); }
+    .youtube-theme .shaka-seek-bar      { background:rgba(255,255,255,.2) !important; }
+    .youtube-theme .shaka-buffered-range { background:rgba(255,255,255,.4) !important; }
+    .youtube-theme .shaka-played-range   { background:rgb(255,0,0) !important; }
+    @media(max-width:768px){ body{ padding:1px; } .video-container{ max-width:100%; height:100%; } }
+    @media(min-width:769px) and (max-width:1024px){ .video-container{ max-width:854px; } }
+  </style>
+</head>
+<body>
+  <div class="video-container">
+    <div class="shaka-video-container" data-shaka-player>
+      <video id="video" autoplay muted playsinline preload="auto"></video>
+    </div>
+
+    <!-- TG badge -->
+    <a id="tg-badge" href="https://t.me/+qUHOnerArQMyYWE9" target="_blank"><svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L8.48 13.617l-2.95-.924c-.64-.203-.658-.64.135-.954l11.566-4.461c.537-.194 1.006.131.663.943z"/></svg> @footstersreal</a>
+
+    <!-- TG popup — shown immediately, dismissed on button click -->
+    <div id="tg-overlay">
+      <div id="tg-popup">
+        <button id="tg-close">✕</button>
+        <div class="tg-icon-wrap"><svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L8.48 13.617l-2.95-.924c-.64-.203-.658-.64.135-.954l11.566-4.461c.537-.194 1.006.131.663.943z"/></svg></div>
+        <h2>Join Telegram</h2>
+        <p>Get live streams &amp; updates instantly</p>
+        <div class="handle">@footstersreal</div>
+        <a class="tg-join" href="https://t.me/+qUHOnerArQMyYWE9" target="_blank">JOIN NOW</a>
+        <button class="tg-later" id="tg-later">Later</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
 const params = new URLSearchParams(window.location.search);
 const streamId = params.get('id') || '1_ENGLISH';
 const quality  = params.get('q') || 'auto';
@@ -133,3 +319,5 @@ async function initializePlayer() {
 
 document.addEventListener('DOMContentLoaded', initializePlayer);
 </script>
+</body>
+</html>
