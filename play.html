@@ -37,7 +37,7 @@ const video = document.getElementById("video");
 let player;
 
 
-// ✅ GET STREAM DIRECTLY (NO EXTRA FETCH)
+// ✅ GET STREAM FROM auto_streams
 async function getStreamUrl(){
 
   const res = await fetch(DATA_URL);
@@ -55,7 +55,6 @@ async function getStreamUrl(){
 
   const text = match.auto_streams[0].auto;
 
-  // 🔥 extract correct quality link directly
   const lines = text.split("\n");
 
   for(let line of lines){
@@ -64,12 +63,11 @@ async function getStreamUrl(){
     }
   }
 
-  // fallback → first available stream
   return lines.find(l => l.includes(".m3u8"));
 }
 
 
-// ✅ INIT PLAYER
+// ✅ INIT PLAYER (WITH CREDENTIAL FIX)
 async function initPlayer(){
 
   try{
@@ -79,6 +77,17 @@ async function initPlayer(){
     console.log("PLAYING:", streamUrl);
 
     player = new shaka.Player(video);
+
+    // 🔥 THIS IS THE REAL FIX
+    player.configure({
+      streaming: {
+        useNativeHlsOnSafari: true
+      }
+    });
+
+    player.getNetworkingEngine().registerRequestFilter((type, request) => {
+      request.allowCrossSiteCredentials = true;
+    });
 
     const container = document.querySelector(".shaka-video-container");
     const ui = new shaka.ui.Overlay(player, container, video);
@@ -96,14 +105,18 @@ async function initPlayer(){
       ]
     });
 
-    // 🔥 IMPORTANT: NO HEADER MODIFICATION
     await player.load(streamUrl);
 
-    await video.play();
+    try{
+      await video.play();
+    }catch{
+      video.muted = true;
+      await video.play();
+    }
 
   }catch(err){
-    console.error(err);
-    alert("Stream failed (token expired or blocked)");
+    console.error("REAL ERROR:", err);
+    alert("Playback failed (CORS / credentials issue)");
   }
 }
 
