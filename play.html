@@ -4,24 +4,15 @@
 
 <meta charset="UTF-8">
 <title>Fancode Player</title>
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.6.0/shaka-player.ui.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.6.0/controls.min.css">
 
 <style>
-body{
-  margin:0;
-  background:#000;
-}
-.video-container{
-  position:fixed;
-  inset:0;
-}
-video{
-  width:100%;
-  height:100%;
-}
+body{margin:0;background:#000;}
+.video-container{position:absolute;width:100%;height:100%;}
+video{width:100%;height:100%;}
 </style>
 
 </head>
@@ -36,66 +27,58 @@ video{
 
 <script>
 
-// JSON FILE
 const DATA_URL = "https://raw.githubusercontent.com/Jitendra-unatti/fancode/refs/heads/main/data/fancode.json";
 
-// URL PARAMS FROM INDEX
 const params = new URLSearchParams(window.location.search);
-const matchParam = params.get("id"); // example 141338_ENGLISH
-const quality = params.get("q");     // example 720
+const matchId = params.get("id");
+const quality = params.get("q");
 
 const video = document.getElementById("video");
 let player;
 
-// GET STREAM FROM auto_streams
+
+// 🔥 GET STREAM FROM auto_streams
 async function getStreamUrl(){
 
   const res = await fetch(DATA_URL);
   const data = await res.json();
 
-  const pureId = matchParam.split("_")[0];
+  const pureId = matchId.split("_")[0];
 
-  const match = data.matches.find(
-    m => String(m.match_id) === String(pureId)
-  );
+  const match = data.matches.find(m => String(m.match_id) === String(pureId));
 
-  if(!match){
-    throw new Error("Match not found in JSON");
+  if(!match || !match.auto_streams?.length){
+    throw new Error("Stream not found");
   }
 
-  if(!match.auto_streams || !match.auto_streams.length){
-    throw new Error("auto_streams missing");
-  }
-
-  // THIS IS THE PLAYLIST TEXT
   const playlistText = match.auto_streams[0].auto;
 
-  console.log("Using auto_streams playlist");
-
-  // extract quality
-  const regex = new RegExp(`https://[^\\n]*${quality}p\\.m3u8[^\\n]*`);
+  // Extract quality URL
+  const regex = new RegExp(`https?:\/\/.*${quality}p\.m3u8[^\n]*`);
   const found = playlistText.match(regex);
 
-  if(found){
-    console.log("Selected stream:", found[0]);
-    return found[0];
-  }
+  if(found) return found[0];
 
-  // fallback -> highest available
-  const fallback = playlistText.match(/https:\/\/[^\n]*1080p\.m3u8[^\n]*/);
-  if(fallback) return fallback[0];
-
-  throw new Error("Quality stream not found");
+  return playlistText.match(/https?:\/\/.*\.m3u8[^\n]*/)[0];
 }
 
-// INIT PLAYER
-async function init(){
+
+// 🔥 INIT PLAYER WITH HEADERS FIX
+async function initPlayer(){
 
   try{
 
     const streamUrl = await getStreamUrl();
 
+    console.log("Playing:", streamUrl);
+
     player = new shaka.Player(video);
+
+    // ✅ IMPORTANT FIX: ADD HEADERS
+    player.getNetworkingEngine().registerRequestFilter(function(type, request) {
+      request.headers['Referer'] = 'https://www.fancode.com/';
+      request.headers['Origin'] = 'https://www.fancode.com';
+    });
 
     const container = document.querySelector(".shaka-video-container");
     const ui = new shaka.ui.Overlay(player, container, video);
@@ -109,8 +92,7 @@ async function init(){
         "time_and_duration",
         "spacer",
         "quality",
-        "fullscreen",
-        "overflow_menu"
+        "fullscreen"
       ]
     });
 
@@ -124,13 +106,12 @@ async function init(){
     }
 
   }catch(err){
-    console.error(err);
-    alert("Stream failed to load");
+    console.error("ERROR:", err);
+    alert("Stream blocked / expired");
   }
-
 }
 
-document.addEventListener("DOMContentLoaded", init);
+document.addEventListener("DOMContentLoaded", initPlayer);
 
 </script>
 
