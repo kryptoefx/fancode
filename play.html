@@ -4,8 +4,7 @@
 
 <meta charset="UTF-8">
 <title>Fancode Player</title>
-
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.6.0/shaka-player.ui.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.6.0/controls.min.css">
@@ -38,59 +37,63 @@ video{
 
 <script>
 
-// 🔥 YOUR JSON SOURCE
+// JSON FILE
 const DATA_URL = "https://raw.githubusercontent.com/Jitendra-unatti/fancode/refs/heads/main/data/fancode.json";
 
-// GET PARAMS
+// GET PARAMS FROM INDEX
 const params = new URLSearchParams(window.location.search);
-const matchId = params.get("id");   // 141448_ENGLISH
-const quality = params.get("q");    // 720
+const matchId = params.get("id");   // example: 141338_ENGLISH
+const quality = params.get("q");    // example: 720
 
 const video = document.getElementById("video");
 let player;
 
-// ✅ FETCH STREAM FROM JSON (ONLY auto_streams)
-async function getStreamUrl() {
+
+// STEP 1: GET STREAM FROM JSON (auto_streams only)
+async function getStreamUrl(){
 
   const res = await fetch(DATA_URL);
   const data = await res.json();
 
   const pureId = matchId.split("_")[0];
 
-  const match = data.matches.find(
-    m => String(m.match_id) === String(pureId)
-  );
+  const match = data.matches.find(m => String(m.match_id) === String(pureId));
 
-  if (!match || !match.auto_streams?.length) {
+  if(!match || !match.auto_streams || !match.auto_streams.length){
     throw new Error("Stream not found");
   }
 
-  const masterUrl = match.auto_streams[0].auto;
+  const playlistText = match.auto_streams[0].auto;
 
-  console.log("Master URL:", masterUrl);
+  console.log("AUTO STREAM TEXT:", playlistText);
 
-  // Fetch master playlist
-  const playlistRes = await fetch(masterUrl);
-  const playlistText = await playlistRes.text();
-
-  // Extract selected quality
-  const regex = new RegExp(`(https?:\/\/.*${quality}p\.m3u8)`);
+  // STEP 2: EXTRACT SELECTED QUALITY
+  const regex = new RegExp(`https?:\/\/.*${quality}p\.m3u8[^\\n]*`);
   const found = playlistText.match(regex);
 
-  if (found && found[1]) {
-    console.log("Selected Quality:", found[1]);
-    return found[1];
+  if(found && found[0]){
+    console.log("Selected quality stream:", found[0]);
+    return found[0];
   }
 
-  // fallback
-  return masterUrl;
+  // fallback → pick 720 if not found
+  const fallback = playlistText.match(/https?:\/\/.*720p\.m3u8[^\n]*/);
+  if(fallback) return fallback[0];
+
+  // final fallback → first available stream
+  const first = playlistText.match(/https?:\/\/.*\.m3u8[^\n]*/);
+  return first ? first[0] : null;
 }
 
-// ✅ INIT PLAYER
-async function initPlayer() {
-  try {
+
+// STEP 3: START SHAKA PLAYER
+async function initPlayer(){
+
+  try{
 
     const streamUrl = await getStreamUrl();
+
+    console.log("PLAYING:", streamUrl);
 
     player = new shaka.Player(video);
 
@@ -98,8 +101,8 @@ async function initPlayer() {
     const ui = new shaka.ui.Overlay(player, container, video);
 
     ui.configure({
-      addBigPlayButton: true,
-      controlPanelElements: [
+      addBigPlayButton:true,
+      controlPanelElements:[
         "play_pause",
         "mute",
         "volume",
@@ -113,27 +116,19 @@ async function initPlayer() {
 
     await player.load(streamUrl);
 
-    // Force selected quality
-    const tracks = player.getVariantTracks();
-    const selected = tracks.find(t => t.height == quality);
-    if (selected) {
-      player.selectVariantTrack(selected, true);
-    }
-
-    try {
+    try{
       await video.play();
-    } catch {
+    }catch{
       video.muted = true;
       await video.play();
     }
 
-  } catch (err) {
-    console.error("Error:", err);
+  }catch(err){
+    console.error(err);
     alert("Stream failed to load");
   }
 }
 
-// START
 document.addEventListener("DOMContentLoaded", initPlayer);
 
 </script>
