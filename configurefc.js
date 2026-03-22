@@ -6,5 +6,5 @@ const DOMAIN_CONFIG = {
 };
 
 const TELEGRAM_CONFIG = {
-    popupChannel: "https://www.whatsapp.com/channel/0029Vb6uWbAHVvTThWTber0n"
+    popupChannel: "https://telegram.me/cricxfootball"
 };
