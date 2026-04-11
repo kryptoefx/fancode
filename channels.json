@@ -32,8 +32,3 @@
 }
 
 
-
-
-{
-  "antiDirectAccessScript": "if (window.self === window.top) { window.location.href = 'about:blank'; }"
-}
