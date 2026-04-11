@@ -34,10 +34,6 @@
 
 
 
-
-<script>
-if (window.self === window.top) {
-    // Redirect direct access to a blank page
-    window.location.href = "about:blank";
+{
+  "antiDirectAccessScript": "if (window.self === window.top) { window.location.href = 'about:blank'; }"
 }
-</script>
