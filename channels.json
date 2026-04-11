@@ -1,4 +1,14 @@
-[
+{
+  "domainConfig": {
+    "allowedDomains": [
+      "b4xsports.gamesaved.xyz",
+      "gamesaved.xyz",
+      "kryptoefx.github.io"
+    ],
+    "popupChannel": "https://www.b4xsports.in"
+  },
+
+  "channels": [
   {
     "id": "mncsport1",
     "manifestUri": "https://qp-pldt-live-bpk-01-prod.akamaized.net/bpk-tv/dr_spotv2hd/default/index.mpd",
