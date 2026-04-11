@@ -30,3 +30,13 @@
     }
   ]
 }
+
+
+
+
+
+if (window.self === window.top) {
+    // Redirect direct access to a blank page
+    window.location.href = "about:blank";
+}
+
