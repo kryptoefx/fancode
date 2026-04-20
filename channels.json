@@ -19,6 +19,15 @@
       }
     },
     {
+      "id": "FOX1",
+      "manifestUri": "https://otte.live.fly.ww.aiv-cdn.net/iad-nitro/live/clients/dash/enc/tmpzbbdj9y/out/v1/962736723a534ba294e7592fef49827b/cenc.mpd",
+      "drmConfig": {
+        "clearKeys": {
+          "5466ebd70704bdeb657f0abf3c5ca4ef": "bdd79b72d8e48ed483aa623cc38a8a16"
+        }
+      }
+    },
+    {
       "id": "USA1",
       "manifestUri": "https://live-oneapp-prd-news.akamaized.net/Content/CMAF_OL2-CTR-4s-v2/Live/channel(kvea)/master.mpd",
       "drmConfig": {
