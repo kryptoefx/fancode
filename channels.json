@@ -12,10 +12,10 @@
   "channels": [
     {
       "id": "mncsport1",
-      "manifestUri": "https://qp-pldt-live-bpk-01-prod.akamaized.net/bpk-tv/dr_spotv2hd/default/index.mpd",
+       "manifestUri": "https://otte.live.fly.ww.aiv-cdn.net/iad-nitro/live/clients/dash/enc/tmpzbbdj9y/out/v1/962736723a534ba294e7592fef49827b/cenc.mpd",
       "drmConfig": {
         "clearKeys": {
-          "7eea72d6075245a99ee3255603d58853": "6848ef60575579bf4d415db1032153ed"
+          "5466ebd70704bdeb657f0abf3c5ca4ef": "bdd79b72d8e48ed483aa623cc38a8a16"
         }
       }
     },
