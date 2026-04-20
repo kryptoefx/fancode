@@ -10,11 +10,11 @@
 
   "channels": [
     {
-      "id": "mncsport1",
-      "manifestUri": "https://qp-pldt-live-bpk-01-prod.akamaized.net/bpk-tv/dr_spotv2hd/default/index.mpd",
+      "id": "FOX1",
+      "manifestUri": "https://live-oneapp-prd-news.akamaized.net/Content/CMAF_OL2-CTR-4s/Live/channel(universo-east)/master.mpd",
       "drmConfig": {
         "clearKeys": {
-          "7eea72d6075245a99ee3255603d58853": "6848ef60575579bf4d415db1032153ed"
+          "96b67fa09140329a89b7a1ead134eda3": "c618d32c56cdc6cad8330eb98507ca3f"
         }
       }
     },
