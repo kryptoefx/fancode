@@ -21,6 +21,17 @@
 
 
 {
+      "id": "LALIGATV",
+      "manifestUri": "https://a151aivottlinear-a.akamaihd.net/OTTB/sin-nitro/live/dash/enc/k0duzgfejg/out/v1/70a50b1bda944628b8e7e66ab4069419/cenc.mpd",
+      "drmConfig": {
+        "clearKeys": {
+          "620e51b82596475517a27aa425c52280": "2b9ba811e9c5aeafc8ae1b71cdca4d6a"
+        }
+      }
+    },
+    
+
+{
       "id": "TSN",
       "manifestUri": "https://otte.cache.aiv-cdn.net/bom-nitro/live/clients/dash/enc/lzhmuzmjsl/out/v1/c171eeb214c749f2b351c79df317b21e/cenc.mpd",
       "drmConfig": {
