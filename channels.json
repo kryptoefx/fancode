@@ -45,7 +45,7 @@
       "manifestUri": "https://live-oneapp-prd-news.akamaized.net/Content/CMAF_OL2-CTR-4s/Live/channel(universo-east)/master.mpd",
       "drmConfig": {
         "clearKeys": {
-          "c618d32c56cdc6cad8330eb98507ca3f": "96b67fa09140329a89b7a1ead134eda3"
+          "96b67fa09140329a89b7a1ead134eda3": "c618d32c56cdc6cad8330eb98507ca3f"
         }
       }
     },
