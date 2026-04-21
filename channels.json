@@ -19,6 +19,60 @@
       }
     },
 
+
+{
+      "id": "TSN",
+      "manifestUri": "https://otte.cache.aiv-cdn.net/bom-nitro/live/clients/dash/enc/lzhmuzmjsl/out/v1/c171eeb214c749f2b351c79df317b21e/cenc.mpd",
+      "drmConfig": {
+        "clearKeys": {
+          "f5c2b30eac11be1e8cdfc9585f5fe6af": "a8198d17bf9b0da77450fbb919a38b2d"
+        }
+      }
+    },
+    
+
+{
+      "id": "PS1",
+      "manifestUri": "https://a151aivottlinear-a.akamaihd.net/OTTB/sin-nitro/live/dash/enc/m6sqanvm2m/out/v1/f6beb46c6e9a4132ad739f3ca27df6aa/cenc.mpd",
+      "drmConfig": {
+        "clearKeys": {
+          "1444f4235529f183f0a5a486befe9cdb": "e5e3fec67a1bb3472a2089c8a0a2557f"
+        }
+      }
+    },
+    
+{
+      "id": "PS2",
+      "manifestUri": "https://a151aivottlinear-a.akamaihd.net/OTTB/sin-nitro/live/dash/enc/bcj3iscpd6/out/v1/fcd137b391214f7cb99dd4d7be90ca87/cenc.mpd",
+      "drmConfig": {
+        "clearKeys": {
+          "1a5df53609ebc9857898c490f4724918": "77f62980d582ec541280796acf8b2d19"
+        }
+      }
+    },
+
+{
+      "id": "BEIN3",
+      "manifestUri": "https://a151aivottlinear-a.akamaihd.net/OTTB/sin-nitro/live/dash/enc/q4u5nwaogz/out/v1/18de6d3e65934f3a8de4358e69eab86c/cenc.mpd",
+      "drmConfig": {
+        "clearKeys": {
+          "7995c724a13748ed970840a8ab5bb9b3": "67bdaf1e2175b9ff682fcdf0e2354b1e"
+        }
+      }
+    },
+    
+    
+
+{
+      "id": "FUBO",
+      "manifestUri": "https://otte.cache.aiv-cdn.net/bom-nitro/live/clients/dash/enc/3b7qwiqzk3/out/v1/9f14895badca43e6a716db021dcd0c31/cenc.mpd",
+      "drmConfig": {
+        "clearKeys": {
+          "dc69b6159a0f9f0a4e03b3ff91cbacd5": "d0dcbcd7723bc40df0bf34c9c092d51f"
+        }
+      }
+    },
+    
 {
       "id": "FC1",
       "manifestUri": "https://a204aivottepl-a.akamaihd.net/sin-nitro/live/clients/dash/enc/fdb3pubmek/out/v1/aefca6420f944a9482e117f315de535f/cenc.mpd",
