@@ -19,7 +19,16 @@
       }
     },
 
-
+{
+      "id": "SKYDUTCH",
+      "manifestUri": "https://simplitv-live.mdn.ors.at/live/eds/sky_sport_premier_league_hd/dash/sky_sport_premier_league_hd.mpd",
+      "drmConfig": {
+        "clearKeys": {
+          "446af6dd9ec0395eaf5ab6adac2b8234": "a70a5944e51312f5a045b1e81651d033"
+        }
+      }
+    },
+    
 {
       "id": "LALIGATV",
       "manifestUri": "https://a151aivottlinear-a.akamaihd.net/OTTB/sin-nitro/live/dash/enc/k0duzgfejg/out/v1/70a50b1bda944628b8e7e66ab4069419/cenc.mpd",
