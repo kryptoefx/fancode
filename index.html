@@ -1,130 +1,253 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8"/>
-<title>Famcode - Matches</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<link rel="shortcut icon" href="#"/>
-<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+<meta charset="utf-8">
+<title>Custom Match Scores</title>
+
 <style>
-body{background:#0f0f0f;color:#fff;}
 
-.match-card{
-transition:.3s;
-background:linear-gradient(145deg,#1a1a1a,#1f1f1f);
+body{
+margin:0;
+background:#f2f2f2;
+font-family:Arial,sans-serif;
 }
 
-.match-card:hover{
-transform:translateY(-6px);
-box-shadow:0 25px 35px rgba(0,0,0,.45);
+.tabs{
+display:flex;
+gap:5px;
+padding:10px;
 }
 
-.live-badge{animation:pulse 1.5s infinite;}
-
-@keyframes pulse{
-0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.7);}
-50%{box-shadow:0 0 15px 10px rgba(239,68,68,0);}
+.tabs button{
+flex:1;
+padding:12px;
+border:none;
+background:#0078ff;
+color:#fff;
+font-weight:bold;
+cursor:pointer;
+border-radius:6px;
 }
 
-.match-img{transition:transform .3s;}
+.tabs button.active{
+background:#004fc4;
+}
 
-.match-card:hover .match-img{transform:scale(1.03);}
+.card{
+background:#fff;
+margin:10px;
+border-radius:10px;
+padding:12px;
+box-shadow:0 2px 10px rgba(0,0,0,.15);
+overflow:hidden;
+}
+
+.team{
+width:35%;
+float:left;
+text-align:center;
+}
+
+.center{
+width:30%;
+float:left;
+text-align:center;
+}
+
+.logo{
+width:55px;
+height:55px;
+object-fit:contain;
+}
+
+.score{
+font-size:28px;
+font-weight:bold;
+}
+
+.badge{
+display:inline-block;
+padding:4px 10px;
+border-radius:20px;
+color:#fff;
+font-size:12px;
+margin-top:5px;
+}
+
+.live{
+background:#d60000;
+}
+
+.upcoming{
+background:#0078ff;
+}
+
+.finished{
+background:#28a745;
+}
+
+.info{
+clear:both;
+margin-top:10px;
+padding-top:10px;
+border-top:1px solid #eee;
+text-align:center;
+}
 
 </style>
 </head>
-<body class="bg-gray-950 min-h-screen">
-<div class="max-w-7xl mx-auto px-4 py-8 sm:py-10">
-<h1 class="text-3xl sm:text-4xl font-bold text-center text-white mb-8 tracking-wide">
-Fancode Live
-</h1>
-<div id="matches-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+<body>
+
+<div class="tabs">
+<button class="active" onclick="showTab('live')">LIVE</button>
+<button onclick="showTab('upcoming')">UPCOMING</button>
+<button onclick="showTab('finished')">FINISHED</button>
 </div>
+
+<div id="matches"></div>
+
 <script>
-const container=document.getElementById("matches-container");
-const DATA_URL="https://raw.githubusercontent.com/Jitendra-unatti/fancode/refs/heads/main/data/fancode.json";
-const PLAY_BASE="https://kryptoefx.github.io/fancode/play.html";
 
-function makeBtn(label,href){
-const a=document.createElement("a");
-a.href=href;
-a.target="_blank";
-a.className="px-4 py-2 rounded-lg text-sm flex items-center justify-center shadow-md transition-all bg-red-600 hover:bg-red-700 text-white";
-a.innerHTML=`<i class="fas fa-play mr-2"></i>${label}`;
-return a;
+let allGames=[];
+let currentTab='live';
+
+function logo(id){
+return `https://imagecache.365scores.com/image/upload/f_png,w_80,h_80,c_limit,q_auto:eco,dpr_2,d_Competitors:default1.png/v1/Competitors/${id}`;
 }
 
-fetch(DATA_URL)
-.then(r=>r.json())
-.then(data=>{
-let matches=Array.isArray(data.matches)?data.matches:[];
+function showTab(tab){
 
-matches.sort((a,b)=>{
-const aLive=(a.status||"").toUpperCase()==="LIVE"||(a.streamingStatus||"").toUpperCase()==="STARTED";
-const bLive=(b.status||"").toUpperCase()==="LIVE"||(b.streamingStatus||"").toUpperCase()==="STARTED";
-return(bLive?1:0)-(aLive?1:0);
+currentTab=tab;
+
+document.querySelectorAll('.tabs button')
+.forEach(btn=>btn.classList.remove('active'));
+
+if(tab==='live')
+document.querySelectorAll('.tabs button')[0].classList.add('active');
+
+if(tab==='upcoming')
+document.querySelectorAll('.tabs button')[1].classList.add('active');
+
+if(tab==='finished')
+document.querySelectorAll('.tabs button')[2].classList.add('active');
+
+render();
+}
+
+function render(){
+
+let games=[];
+
+if(currentTab==='live')
+games=allGames.filter(g=>g.statusGroup===3);
+
+if(currentTab==='upcoming')
+games=allGames.filter(g=>g.statusGroup===2);
+
+if(currentTab==='finished')
+games=allGames.filter(g=>g.statusGroup===4);
+
+const container=document.getElementById('matches');
+
+if(!games.length){
+container.innerHTML='<div class="card">No matches available</div>';
+return;
+}
+
+container.innerHTML='';
+
+games.forEach(game=>{
+
+const home=game.homeCompetitor||{};
+const away=game.awayCompetitor||{};
+
+let score='VS';
+let badge='';
+let cls='upcoming';
+
+if(game.statusGroup===3){
+
+score=`${home.score||0} - ${away.score||0}`;
+badge=game.shortStatusText||'LIVE';
+cls='live';
+
+}
+
+if(game.statusGroup===4){
+
+score=`${home.score||0} - ${away.score||0}`;
+badge='FT';
+cls='finished';
+
+}
+
+if(game.statusGroup===2){
+
+badge=new Date(game.startTime)
+.toLocaleTimeString([],{
+hour:'2-digit',
+minute:'2-digit'
 });
 
-matches.forEach(match=>{
-const isLive=(match.status||"").toUpperCase()==="LIVE"||(match.streamingStatus||"").toUpperCase()==="STARTED";
-const imgSrc=match.image||(match.image_cdn&&(match.image_cdn.APP||match.image_cdn.BG_IMAGE))||"https://www.fancode.com/skillup-uploads/cms-media/Cricket_Fallback_Old_match-card.jpg";
-const card=document.createElement("div");
-card.className=`rounded-2xl overflow-hidden shadow-xl match-card border border-gray-800 ${isLive?"ring-2 ring-red-600":""}`;
-const headerHTML=`
-<div class="relative">
-<img src="${imgSrc}" class="w-full h-48 sm:h-60 md:h-64 lg:h-72 object-cover object-top match-img">
-${isLive?`<span class="absolute top-3 left-3 bg-red-600 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-md live-badge">LIVE</span>`:""}
+}
+
+container.innerHTML+=`
+
+<div class="card">
+
+<div class="team">
+<img class="logo" src="${logo(home.id)}">
+<div>${home.name||''}</div>
 </div>
+
+<div class="center">
+<div class="score">${score}</div>
+<div class="badge ${cls}">
+${badge}
+</div>
+</div>
+
+<div class="team">
+<img class="logo" src="${logo(away.id)}">
+<div>${away.name||''}</div>
+</div>
+
+<div class="info">
+Match ID: ${game.id}
+</div>
+
+</div>
+
 `;
 
-const btnWrap=document.createElement("div");
-btnWrap.className="flex flex-col sm:flex-row sm:flex-wrap gap-3 hidden mt-4";
-
-if(isLive && match.auto_streams && match.auto_streams.length){
-const master=match.auto_streams[0].auto;
-const qualities=[...master.matchAll(/(\d+)p\.m3u8/g)];
-const lang=(match.language||"ENGLISH").toUpperCase();
-
-qualities.forEach(q=>{
-const quality=q[1];
-const href=`${PLAY_BASE}?id=${match.match_id}_${lang}&q=${quality}`;
-btnWrap.appendChild(makeBtn(`${quality}p`,href));
 });
+
 }
 
-const body=document.createElement("div");
-body.className="p-5 sm:p-6";
-body.innerHTML=`
-<h2 class="text-xl sm:text-2xl font-semibold text-white mb-1">${match.title||"Match"}</h2>
-<p class="text-gray-400 text-sm mb-1">${match.tournament||""}</p>
-<p class="text-sm text-gray-500 mb-2">${match.startTime||""}</p>
-<p class="text-sm text-gray-500 mb-3">${match.language}</p>
-`;
+async function loadMatches(){
 
-if(isLive){
-const toggleBtn=document.createElement("button");
-toggleBtn.className="w-full bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white font-semibold py-2 px-4 rounded-lg mt-3";
-toggleBtn.innerHTML=`<i class="fas fa-tv mr-2"></i>Watch Now`;
-toggleBtn.onclick=()=>{
-btnWrap.classList.toggle("hidden");
-};
+try{
 
-body.appendChild(toggleBtn);
-body.appendChild(btnWrap);
-}
-else{
-const noStream=document.createElement("div");
-noStream.className="w-full bg-gray-800 text-gray-400 py-2 px-4 rounded-lg mt-3 text-center";
-noStream.innerHTML=`<i class="fas fa-clock mr-2"></i>No stream available yet`;
-body.appendChild(noStream);
+const res=await fetch('scores.php');
+const data=await res.json();
+
+allGames=data.games||[];
+
+render();
+
+}catch(e){
+
+document.getElementById('matches').innerHTML=
+'<div class="card">Failed to load matches</div>';
+
 }
 
-card.innerHTML=headerHTML;
-card.appendChild(body);
-container.appendChild(card);
-});
-});
+}
+
+loadMatches();
+
+setInterval(loadMatches,30000);
+
 </script>
 
 </body>
