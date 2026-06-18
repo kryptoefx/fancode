@@ -1,0 +1,82 @@
+const streamLinks = [
+  {
+    title: "LINK 1",
+    quality: "FHD",
+    device: "Android/IOS/PC",
+    language: "ENGLISH",
+    region: "WORLDWIDE",
+    url: "https://b4.taazaboom.com/p/b4xm3u8.html?b4x=https://d1211whpimeups.cloudfront.net/smil:rtbgo/playlist.m3u8"
+  },
+  {
+    title: "LINK 2",
+    quality: "FHD",
+    device: "Android/IOS/PC",
+    language: "ENGLISH",
+    region: "WORLDWIDE",
+    url: "https://b4.taazaboom.com/p/b4xiframe.html?b4x=https://paribirdflygame.blogspot.com/?b4x=https://lordatomic.github.io/uefa/ceng.html"
+  },
+  {
+    title: "LINK 3",
+    quality: "HD",
+    device: "Android/PC",
+    language: "ENGLISH",
+    region: "WORLDWIDE",
+    url: "https://b4.taazaboom.com/p/b4xm3u8.html?b4x=https://live.kooran53.cfd/goolato3.m3u8"
+  },
+  {
+    title: "LINK 4",
+    quality: "HD",
+    device: "Android/IOS/PC",
+    language: "ARABIC",
+    region: "WORLDWIDE",
+    url: "https://b4.taazaboom.com/p/b4xm3u8.html?b4x=https://d1g8wgjurz8via.cloudfront.net/bpk-tv/NGCHD/default/masterblacked.com.m3u8"
+  },
+  {
+    title: "LINK 5",
+    quality: "HD",
+    device: "Android/IOS/PC",
+    language: "HINDI",
+    region: "WORLDWIDE",
+    url: "https://b4.taazaboom.com/p/b4xm3u8.html?b4x=https://live05.msdht.app/live/08552895.m3u8"
+  },
+  {
+    title: "LINK 6",
+    quality: "HD",
+    device: "Android/IOS/PC",
+    language: "CHINESE",
+    region: "WORLDWIDE",
+    url: "https://b4.taazaboom.com/p/b4xiframe.html?b4x=https://paribirdflygame.blogspot.com/?b4x=https://la18hd.com/vivo/canales.php?stream=dsports"
+  },
+  {
+    title: "LINK 7",
+    quality: "HD",
+    device: "Android/PC/IOS",
+    language: "ENGLISH",
+    region: "WORLDWIDE",
+    url: "https://wpjoinlink123.blogspot.com/"
+  }
+];
+
+const container = document.getElementById("stream-container");
+
+container.innerHTML = streamLinks.map(link => `
+<div class="techornate-socials">
+  <div style="text-align:center;">
+    <b>
+      <span style="font-family:arial;font-size:15px;">
+        ${link.device} |
+        <span style="color:#005aff;">${link.language}</span> |
+        ${link.region}
+      </span>
+    </b>
+  </div>
+
+  <li style="text-align:center;list-style:none;">
+    <a class="fa fa-play" href="${link.url}" target="_blank">
+      <span class="social-counter">
+        <b>${link.title} | Click Here To Watch | ${link.quality}</b>
+      </span>
+    </a>
+  </li>
+</div>
+`).join('');
