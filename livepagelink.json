@@ -1,11 +1,6 @@
 const streamLinks = [
-   {
-    title: "LINK 1",
-    quality: "FHD",
+{
     device: "YOU CAN SELECT THE LINK FROM HERE (COMMENTARY,QUALITY,SUPPORTING,DEVICE)",
-    language: "SPANISH",
-    region: "WORLDWIDE",
-    url: "https://b4.taazaboom.com/p/b4xm3u8.html?b4x=https://d1211whpimeups.cloudfront.net/smil:rtbgo/playlist.m3u8"
   },
   {
     title: "LINK 1",
