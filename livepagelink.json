@@ -1,6 +1,13 @@
 [
  
-   
+   {
+    "quality": "HD",
+    "device": "Android/IOS/PC",
+    "language": "CHINESE",
+    "region": "WORLDWIDE",
+    "url": "https://b4.taazaboom.com/p/b4xsports.html?b4x=https://live05.msdht.app/live/87547578.m3u8"
+  },
+  
 
   {
     "quality": "HD",
@@ -39,14 +46,7 @@
   },
 
   
-   {
-    "quality": "HD",
-    "device": "Android/IOS/PC",
-    "language": "CHINESE",
-    "region": "WORLDWIDE",
-    "url": "https://b4.taazaboom.com/p/b4xsports.html?b4x=https://live05.msdht.app/live/87547578.m3u8"
-  },
-  
+   
 
 
   
