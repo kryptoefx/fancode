@@ -26,15 +26,7 @@
   },
 
  
- {
-    "quality": "HD",
-    "device": "Android/PC",
-    "language": "DUTCH",
-    "region": "WORLDWIDE",
-    "url": "https://b4.taazaboom.com/p/b4xsports.html?b4x=https://sayanchannelcdn02.pages.dev/football/match"
-  },
 
-  
   {
     "quality": "FHD",
     "device": "Android/IOS/PC",
@@ -43,20 +35,16 @@
     "url": "https://b4.taazaboom.com/p/b4xsports.html?b4x=https://1nyaler.streamhostingcdn.top/stream/94/index.m3u8"
   },
 
- 
- 
- {
-    "quality": "FHD",
-    "device": "Android/IOS/PC",
-    "language": "ENGLISH",
+  {
+    "quality": "HD",
+    "device": "Android/PC",
+    "language": "DUTCH",
     "region": "WORLDWIDE",
-    "url": "https://b4.taazaboom.com/p/b4xsports.html?b4x=https://d1211whpimeups.cloudfront.net/smil:rtbgo/chunklist.m3u8"
+    "url": "https://b4.taazaboom.com/p/b4xsports.html?b4x=https://sayanchannelcdn02.pages.dev/football/match"
   },
 
   
-   
-
-
+ 
   
   {
     "quality": "HD",
