@@ -1,6 +1,12 @@
 [
 
-
+{
+    "quality": "FHD",
+    "device": "Android/PC",
+    "language": "PORTUGUESE",
+    "region": "WORLDWIDE",
+    "url": "https://b4.taazaboom.com/p/b4xsports.html?b4x=https://dfr80qz435crc.cloudfront.net/MNOP/Amagi/Caze/Caze_TV_BR/Caze_TV.m3u8"
+  },
  
    {
     "quality": "HD",
@@ -27,13 +33,7 @@
     "url": "https://b4.taazaboom.com/p/b4xsports.html?b4x=https://customer-d2wx6hg0y7zyfsis.cloudflarestream.com/a919aca8e8fadded8ba82cbbb3c43b04/manifest/video.m3u8"
   },
 
- {
-    "quality": "FHD",
-    "device": "Android/PC",
-    "language": "PORTUGUESE",
-    "region": "WORLDWIDE",
-    "url": "https://b4.taazaboom.com/p/b4xsports.html?b4x=https://sayanchannelcdn02.pages.dev/football/caz"
-  },
+ 
 
   {
     "quality": "FHD",
