@@ -3,6 +3,15 @@
 
 {
     "quality": "FHD",
+    "device": "Android/IOS/PC",
+    "language": "ENGLISH",
+    "region": "WORLDWIDE",
+    "url": "https://news.taazaboom.com/p/b4x-sports.html?live=https://customer-rqx2ncfj15h2he6q.cloudflarestream.com/6bbb3f01ec11e5b10e4369978f011941/manifest/video.m3u8"
+  },
+
+    
+{
+    "quality": "FHD",
     "device": "Android/PC",
     "language": "SPANISH",
     "region": "WORLDWIDE",
@@ -10,19 +19,7 @@
   },
 
     
-{
-    "quality": "FHD",
-    "device": "Android/IOS/PC",
-    "language": "ENGLISH",
-    "region": "WORLDWIDE",
-    "url": "https://news.taazaboom.com/p/b4x-sports.html?live=https://customer-rqx2ncfj15h2he6q.cloudflarestream.com/6bbb3f01ec11e5b10e4369978f011941/manifest/video.m3u8"
-  },
- 
 
-
- 
-
-    
 
  
    {
@@ -39,7 +36,7 @@
     "device": "Android/IOS/PC",
     "language": "ARABIC",
     "region": "WORLDWIDE",
-    "url": "https://news.taazaboom.com/p/b4x-sports.html?live=https://ex.kooran99.cfd/uoorz2_720/index.m3u8"
+    "url": "https://news.taazaboom.com/p/b4x-sports.html?live=https://ed.omener.xyz/qoozn2.m3u8"
   },
 
 {
@@ -50,6 +47,18 @@
     "url": "https://news.taazaboom.com/p/b4x-sports.html?live=https://customer-d2wx6hg0y7zyfsis.cloudflarestream.com/a919aca8e8fadded8ba82cbbb3c43b04/manifest/video.m3u8"
   },
 
+
+{
+    "quality": "FHD",
+    "device": "Android/IOS/PC",
+    "language": "RUSSIAN",
+    "region": "WORLDWIDE",
+    "url": "https://news.taazaboom.com/p/b4x-sports.html?live=https://bl.video.matchtv.ru/media/playlist/free_d46d0cf1712c0542ec7fd4f0808f600a_hd/17_89756005/1080/e6bef86de8a133cd7b27deb040758a00/4796141934.m3u8"
+  },
+ 
+
+
+    
   {
     "quality": "FHD",
     "device": "Android/IOS/PC",
