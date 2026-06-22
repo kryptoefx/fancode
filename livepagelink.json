@@ -17,7 +17,22 @@
     "url": "https://news.taazaboom.com/p/b4x-sports.html?live=https://dfr80qz435crc.cloudfront.net/MNOP/Amagi/Caze/Caze_TV_BR/Caze_TV.m3u8"
   },
  
- 
+   {
+    "quality": "HD",
+    "device": "Android/IOS/PC",
+    "language": "CHINESE",
+    "region": "WORLDWIDE",
+    "url": "https://news.taazaboom.com/p/b4x-sports.html?live=https://live05.apusport.com/live/08552895.m3u8"
+  },
+  
+
+  {
+    "quality": "HD",
+    "device": "Android/IOS/PC",
+    "language": "ARABIC",
+    "region": "WORLDWIDE",
+    "url": "https://news.taazaboom.com/p/b4x-sports.html?live=https://ed.omener.xyz/qoozn2.m3u8"
+  },
     
 {
     "quality": "FHD",
@@ -33,40 +48,11 @@
     "device": "Android/IOS/PC",
     "language": "MALAYALAM",
     "region": "WORLDWIDE",
-    "url": "https://news.taazaboom.com/p/b4x-sports.html?live=https://b4xlivetvmalayalam.blogspot.com"
+    "url": "https://news.taazaboom.com/p/b4x-sports.html?live=https://customer-d2wx6hg0y7zyfsis.cloudflarestream.com/a919aca8e8fadded8ba82cbbb3c43b04/manifest/video.m3u8"
   },
 
-    
 
-
-    
-
-
-   {
-    "quality": "HD",
-    "device": "Android/IOS/PC",
-    "language": "CHINESE",
-    "region": "WORLDWIDE",
-    "url": "https://news.taazaboom.com/p/b4x-sports.html?live=https://live.wxinxi.com/live/25816724_sb2maw7iluj1ghr92sk5siud28tpimx0.m3u8"
-  },
-  
-
-  {
-    "quality": "HD",
-    "device": "Android/IOS/PC",
-    "language": "ARABIC",
-    "region": "WORLDWIDE",
-    "url": "https://news.taazaboom.com/p/b4x-sports.html?live=https://ed.omener.xyz/qoozn2.m3u8"
-  },
-
-{
-    "quality": "FHD",
-    "device": "Android/PC",
-    "language": "HINDI",
-    "region": "INDIA ONLY",
-    "url": "https://news.taazaboom.com/p/b4x-sports.html?live=https://paribirdflygame.blogspot.com/?b4x=https://footxlinks.pages.dev/?id=U1"
-  },
-
+ 
 {
     "quality": "FHD",
     "device": "Android/IOS/PC",
@@ -78,13 +64,7 @@
 
 
     
-  {
-    "quality": "FHD",
-    "device": "Android/IOS/PC",
-    "language": "ENGLISH",
-    "region": "WORLDWIDE",
-    "url": "https://news.taazaboom.com/p/b4x-sports.html?live=https://sportzfylive.com/stream/hd1-argentina-x-austria-2026-06-22/manifest.m3u8"
-  },
+ 
 
   {
     "quality": "FHD",
@@ -94,13 +74,7 @@
     "url": "https://news.taazaboom.com/p/b4x-sports.html?live=https://1nyaler.streamhostingcdn.top/stream/94/index.m3u8"
   },
 
-  {
-    "quality": "HD",
-    "device": "Android/PC",
-    "language": "DUTCH",
-    "region": "WORLDWIDE",
-    "url": "https://news.taazaboom.com/p/b4x-sports.html?live=https://sayanchannelcdn02.pages.dev/football/match"
-  },
+ 
 
   
  
@@ -114,7 +88,13 @@
   },
 
 
-
+ {
+    "quality": "HD",
+    "device": "Android/PC",
+    "language": "DUTCH",
+    "region": "WORLDWIDE",
+    "url": "https://news.taazaboom.com/p/b4x-sports.html?live=https://sayanchannelcdn02.pages.dev/football/match"
+  },
   
   
   {
