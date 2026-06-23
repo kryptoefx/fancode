@@ -55,7 +55,13 @@
     "url": "https://news.taazaboom.com/p/b4x-sports.html?live=https://hello.zee5free.cfd/v/9f15bb846c726fa1650e87c8cef908a8/index.m3u8"
   },
 
-
+{
+    "quality": "HD",
+    "device": "Android/IOS/PC",
+    "language": "SPANISH",
+    "region": "WORLDWIDE",
+    "url": "https://news.taazaboom.com/p/b4x-sports.html?live=https://paribirdflygame.blogspot.com/?b4x=https://la18hd.com/vivo/canales.php?stream=dsports"
+  },
 
     {
     "quality": "SD",
@@ -76,13 +82,7 @@
   },
  
   
-  {
-    "quality": "HD",
-    "device": "Android/IOS/PC",
-    "language": "SPANISH",
-    "region": "WORLDWIDE",
-    "url": "https://news.taazaboom.com/p/b4x-sports.html?live=https://paribirdflygame.blogspot.com/?b4x=https://la18hd.com/vivo/canales.php?stream=dsports"
-  },
+  
 
 
  {
