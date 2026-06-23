@@ -8,26 +8,14 @@
     "url": "https://news.taazaboom.com/p/b4x-sports.html?live=https://otte.cache.aiv-cdn.net/bom-nitro/live/clients/dash/enc/x0srg3jjpz/out/v1/f779c49314394d61886d63f58d9d52e4/cenc.mpd&kid=4f4c3a9912ea752e88f4497864a1bc8b&key=278128004fe8c6ffb2cd2a0c154a241a"
   },
 
-    {
-    "quality": "FHD",
-    "device": "Android/PC",
-    "language": "PORTUGUESE",
-    "region": "WORLDWIDE",
-    "url": "https://news.taazaboom.com/p/b4x-sports.html?live=https://a121aivottepl-a.akamaihd.net/gru-nitro/live/clients/dash/enc/jo3rmhhp2r/out/v1/50656942ce4e40a1be824c9d83578fe9/cenc.mpd&kid=34475edab991ad5e92548aebd710410a&key=501b209cccd323ac00bf5ac15b406cb4"
-  },
+    
 
-{
-    "quality": "HD",
-    "device": "Android/IOS/PC",
-    "language": "CHINESE",
-    "region": "WORLDWIDE",
-    "url": "https://news.taazaboom.com/p/b4x-sports.html?live=https://play.666666.zip/live/4460933.m3u8"
-  },
+
   
 {
     "quality": "HD",
     "device": "Android/IOS/PC",
-    "language": "JAPANESE",
+    "language": "CHINESE",
     "region": "WORLDWIDE",
     "url": "https://news.taazaboom.com/p/b4x-sports.html?live=https://hqlive.yarncdn.live/live/hqtv_blv_phanma/playlist.m3u8"
   },
