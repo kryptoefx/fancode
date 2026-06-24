@@ -3,7 +3,6 @@
 
     
 
- 
    {
     "quality": "HD",
     "device": "Android/IOS/PC",
@@ -24,7 +23,23 @@
     "url": "https://news.taazaboom.com/p/b4x-sports.html?live=https://ex.creatas.site/poolos1.m3u8"
   },
     
+{
+    "quality": "HD",
+    "device": "Android/IOS/PC",
+    "language": "MALAYALAM",
+    "region": "WORLDWIDE",
+    "url": "https://news.taazaboom.com/p/b4x-sports.html?live=https://poorimone.feruo.xyz/index.m3u8"
+  },
 
+{
+    "quality": "FHD",
+    "device": "Android/PC",
+    "language": "ENGLISH",
+    "region": "WORLDWIDE",
+    "url": "https://news.taazaboom.com/p/b4x-sports.html?live=https://inproviszon.st/fox-usa.m3u8"
+  },
+ 
+    
  {
     "quality": "HD",
     "device": "Android/IOS/PC",
@@ -33,13 +48,7 @@
     "url": "https://news.taazaboom.com/p/b4x-sports.html?live=https://paribirdflygame.blogspot.com/?b4x=https://soccerball.st/rampages/unoair1/"
   },
 
-{
-    "quality": "HD",
-    "device": "Android/IOS/PC",
-    "language": "MALAYALAM",
-    "region": "WORLDWIDE",
-    "url": "https://news.taazaboom.com/p/b4x-sports.html?live=https://poorimone.feruo.xyz/index.m3u8"
-  },
+
 
 
 
