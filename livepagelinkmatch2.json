@@ -1,13 +1,6 @@
 [
 
-{
-    "quality": "FHD",
-    "device": "Android/PC",
-    "language": "SPANISH",
-    "region": "WORLDWIDE",
-    "url": "https://news.taazaboom.com/p/b4x-sports.html?live=https://paribirdflygame.blogspot.com/?b4x=https://la16hd.com/play.php?url=aHR0cHM6Ly9saXZlLXB2LXRhLmFtYXpvbi5mYXN0bHktZWRnZS5jb20vaWFkLW5pdHJvL2xpdmUvY2xpZW50cy9kYXNoL2VuYy9vMnZ5NGFhaHNoL291dC92MS9lMjkzYzkzMjc0NWE0NGRjYWY4OTc1NzNkZmM1MzUzMi9jZW5jLm1wZA==&ki=NzYzY2UxZWJjYWYyMzUwMmM4Y2YzNTdjNmVmNDIzZTE=&k=MGM1ZTZjMDgyMGExZWEyODc1MzcyMWRiMDAyNzI0MTE="
-  },
-  
+
 
     
 
@@ -54,7 +47,13 @@
    
 
 
- 
+ {
+    "quality": "HD",
+    "device": "Android/IOS/PC",
+    "language": "MALAYALAM",
+    "region": "WORLDWIDE",
+    "url": "https://news.taazaboom.com/p/b4x-sports.html?live=https://ts.umpzeta.cfd/v/6203d57b8456c5d276f2c534aa539dcb/index.m3u8"
+  },
   
   
   
