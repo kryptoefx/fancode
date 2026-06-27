@@ -2,6 +2,23 @@
 
 
  
+ {
+    "quality": "fHD",
+    "device": "Android/PC",
+    "language": "ENGLISH",
+    "region": "WORLDWIDE",
+    "url": "https://news.taazaboom.com/p/b4x-sports.html?live=https://otte.cache.aiv-cdn.net/bom-nitro/live/clients/dash/enc/72sjo8hygl/out/v1/3079be34d72a4985852d299a02406a0c/cenc.mpd&kid=d185684e2330de5bea436daa094a5e86&key=014f0116154f5bf0050e03a6b0a23157"
+  },
+
+
+  {
+    "quality": "fHD",
+    "device": "Android/PC",
+    "language": "SPANISH",
+    "region": "WORLDWIDE",
+    "url": "https://news.taazaboom.com/p/b4x-sports.html?live=https://otte.cache.aiv-cdn.net/bom-nitro/live/clients/dash/enc/x0srg3jjpz/out/v1/f779c49314394d61886d63f58d9d52e4/cenc.mpd&kid=4f4c3a9912ea752e88f4497864a1bc8b&key=278128004fe8c6ffb2cd2a0c154a241a"
+  },
+
  
    {
     "quality": "HD",
