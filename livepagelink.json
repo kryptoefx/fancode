@@ -32,6 +32,14 @@
     "url": "https://news.taazaboom.com/p/b4x-sports.html?live=https://live05.paznhl.app/live/08552895.m3u8"
   },
   
+    {
+    "quality": "FHD",
+    "device": "Android/PC",
+    "language": "ENGLISH",
+    "region": "WORLDWIDE",
+    "url": "https://news.taazaboom.com/p/b4x-sports.html?live=https://qp-pldt-live-bpk-ucd-prod.akamaized.net/bpk-tv/fifa_ppv1/default/index.mpd&kid=2c338a117d434ce4bbe3569231af90f1&key=a9633d901ee8a3f4f58ac314b5c5f4fb"
+  },
+
  
    {
     "quality": "HD",
