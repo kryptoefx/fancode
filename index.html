@@ -149,7 +149,7 @@
 
     <div class="chat-input-area">
         <div class="input-row">
-            <input type="text" id="usernameInput" placeholder="Your Name..." maxlength="15">
+            <input type="text" id="usernameInput" placeholder="Your Name..." maxlength="15" oninput="saveName()">
             <button id="gif-btn" onclick="toggleGifBox()">GIF</button>
         </div>
         <div class="input-row">
@@ -172,6 +172,20 @@
     
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
+
+    // Check if a saved name exists when the page first loads
+    window.onload = function() {
+        const savedName = localStorage.getItem("chat_username");
+        if(savedName) {
+            document.getElementById("usernameInput").value = savedName;
+        }
+    };
+
+    // Save the name locally as the user types
+    function saveName() {
+        const nameInput = document.getElementById("usernameInput").value.trim();
+        localStorage.setItem("chat_username", nameInput);
+    }
 
     db.ref("messages").limitToLast(50).on("child_added", (snapshot) => {
         const data = snapshot.val();
