@@ -65,6 +65,11 @@
             padding: 10px;
             background: #151515;
             display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .input-row {
+            display: flex;
             gap: 5px;
             align-items: center;
         }
@@ -77,6 +82,9 @@
             border-radius: 20px;
             outline: none;
         }
+        #usernameInput {
+            max-width: 120px;
+        }
         button {
             background: #1a73e8;
             border: none;
@@ -85,6 +93,7 @@
             border-radius: 20px;
             cursor: pointer;
             font-weight: bold;
+            white-space: nowrap;
         }
         button#gif-btn {
             background: #ffe005;
@@ -93,7 +102,7 @@
         .gif-box {
             display: none;
             position: absolute;
-            bottom: 70px;
+            bottom: 110px;
             background: #121a23;
             border: 1px solid #1c2733;
             width: 90%;
@@ -119,12 +128,19 @@
     <div class="chat-header">⚽ B4X Public Live Chat</div>
     <div class="chat-messages" id="chatMessages"></div>
     
-    <div class="gif-box" id="gifBox"></div>
+    <div style="position: relative; width: 100%; display: flex; justify-content: center;">
+        <div class="gif-box" id="gifBox"></div>
+    </div>
 
-    <div class="chat-input-area" style="position: relative;">
-        <button id="gif-btn" onclick="toggleGifBox()">GIF</button>
-        <input type="text" id="messageInput" placeholder="Type a message...">
-        <button onclick="sendMessage()">Send</button>
+    <div class="chat-input-area">
+        <div class="input-row">
+            <input type="text" id="usernameInput" placeholder="Your Name..." maxlength="15">
+            <button id="gif-btn" onclick="toggleGifBox()">GIF</button>
+        </div>
+        <div class="input-row">
+            <input type="text" id="messageInput" placeholder="Type a message...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
     </div>
 </div>
 
@@ -144,9 +160,6 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // Assign generic usernames
-    const username = "Guest_" + Math.floor(Math.random() * 9000 + 1000);
-
     // Read Messages Realtime
     db.ref("messages").limitToLast(50).on("child_added", (snapshot) => {
         const data = snapshot.val();
@@ -159,12 +172,18 @@
 
         chatMessages.innerHTML += `
             <div class="message">
-                <div class="username">${data.username}</div>
+                <div class="username">${data.username || "Anonymous"}</div>
                 <div>${content}</div>
             </div>
         `;
         chatMessages.scrollTop = chatMessages.scrollHeight;
     });
+
+    // Helper to get active name value
+    function getSenderName() {
+        const nameInput = document.getElementById("usernameInput").value.trim();
+        return nameInput !== "" ? nameInput : "Anonymous";
+    }
 
     // Send Processing
     function sendMessage() {
@@ -172,7 +191,7 @@
         if(input.value.trim() === "") return;
 
         db.ref("messages").push({
-            username: username,
+            username: getSenderName(),
             message: input.value,
             type: "text"
         });
@@ -220,7 +239,7 @@
 
     function sendGif(url) {
         db.ref("messages").push({
-            username: username,
+            username: getSenderName(),
             message: url,
             type: "gif"
         });
