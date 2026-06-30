@@ -35,6 +35,13 @@
             padding: 15px;
             overflow-y: auto;
             border-bottom: 1px solid #1c2733;
+            display: flex;
+            flex-direction: column;
+        }
+        /* Forces messages to anchor tightly to the bottom of the frame */
+        .messages-wrapper {
+            margin-top: auto;
+            width: 100%;
         }
         .message {
             margin-bottom: 15px;
@@ -43,11 +50,20 @@
             border-radius: 8px;
             word-wrap: break-word;
         }
+        .message-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
         .message .username {
             font-weight: bold;
             color: #ffe005;
             font-size: 13px;
-            margin-bottom: 4px;
+        }
+        .message .timestamp {
+            font-size: 11px;
+            color: #8596a7;
         }
         .message img {
             max-width: 150px;
@@ -138,7 +154,9 @@
 <body>
 
 <div class="chat-container">
-    <div class="chat-messages" id="chatMessages"></div>
+    <div class="chat-messages" id="chatMessages">
+        <div class="messages-wrapper" id="messagesWrapper"></div>
+    </div>
     
     <div style="position: relative; width: 100%; display: flex; justify-content: center;">
         <div class="gif-box" id="gifBox">
@@ -173,7 +191,6 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // Check if a saved name exists when the page first loads
     window.onload = function() {
         const savedName = localStorage.getItem("chat_username");
         if(savedName) {
@@ -181,24 +198,41 @@
         }
     };
 
-    // Save the name locally as the user types
     function saveName() {
         const nameInput = document.getElementById("usernameInput").value.trim();
         localStorage.setItem("chat_username", nameInput);
     }
 
+    // Read Messages Realtime
     db.ref("messages").limitToLast(50).on("child_added", (snapshot) => {
         const data = snapshot.val();
         const chatMessages = document.getElementById("chatMessages");
+        const wrapper = document.getElementById("messagesWrapper");
         
         let content = data.message;
         if(data.type === "gif") {
             content = `<img src="${data.message}" alt="gif">`;
         }
 
-        chatMessages.innerHTML += `
+        // Format timestamp safely if it exists, otherwise fall back to empty string
+        let timeString = "";
+        if(data.timestamp) {
+            const date = new Date(data.timestamp);
+            let hours = date.getHours();
+            let minutes = date.getMinutes();
+            const ampm = hours >= 12 ? 'pm' : 'am';
+            hours = hours % 12;
+            hours = hours ? hours : 12; // Convert 0 hour to 12
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            timeString = `${hours}:${minutes} ${ampm}`;
+        }
+
+        wrapper.innerHTML += `
             <div class="message">
-                <div class="username">${data.username || "Anonymous"}</div>
+                <div class="message-meta">
+                    <div class="username">${data.username || "Anonymous"}</div>
+                    <div class="timestamp">${timeString}</div>
+                </div>
                 <div>${content}</div>
             </div>
         `;
@@ -217,7 +251,8 @@
         db.ref("messages").push({
             username: getSenderName(),
             message: input.value,
-            type: "text"
+            type: "text",
+            timestamp: firebase.database.ServerValue.TIMESTAMP // Saves the server clock time
         });
         input.value = "";
     }
@@ -285,7 +320,8 @@
         db.ref("messages").push({
             username: getSenderName(),
             message: url,
-            type: "gif"
+            type: "gif",
+            timestamp: firebase.database.ServerValue.TIMESTAMP // Saves the server clock time
         });
         document.getElementById("gifBox").style.display = "none";
     }
