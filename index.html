@@ -11,30 +11,24 @@
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #1c2733;
+            background-color: #151515;
             color: #fff;
             margin: 0;
-            padding: 10px;
+            padding: 0;
             display: flex;
             justify-content: center;
+            align-items: center;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
         }
         .chat-container {
             width: 100%;
-            max-width: 450px;
+            height: 100%;
             background: #151515;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
             display: flex;
             flex-direction: column;
-            height: 85vh;
-        }
-        .chat-header {
-            background: #1a73e8;
-            padding: 12px;
-            font-weight: bold;
-            text-align: center;
-            border-top-left-radius: 8px;
-            border-top-right-radius: 8px;
+            box-sizing: border-box;
         }
         .chat-messages {
             flex: 1;
@@ -67,6 +61,7 @@
             display: flex;
             flex-direction: column;
             gap: 8px;
+            box-sizing: border-box;
         }
         .input-row {
             display: flex;
@@ -102,17 +97,18 @@
         .gif-box {
             display: none;
             position: absolute;
-            bottom: 110px;
+            bottom: 105px;
             background: #121a23;
             border: 1px solid #1c2733;
-            width: 90%;
-            max-width: 400px;
-            height: 250px;
+            width: 94%;
+            max-width: 420px;
+            height: 230px;
             border-radius: 8px;
             z-index: 10;
             flex-direction: column;
             padding: 10px;
             box-sizing: border-box;
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.6);
         }
         .gif-search-bar {
             background: #151515;
@@ -142,7 +138,6 @@
 <body>
 
 <div class="chat-container">
-    <div class="chat-header">⚽ B4X Public Live Chat</div>
     <div class="chat-messages" id="chatMessages"></div>
     
     <div style="position: relative; width: 100%; display: flex; justify-content: center;">
@@ -227,13 +222,12 @@
             box.style.display = "none";
         } else {
             box.style.display = "flex";
-            document.getElementById("gifSearchInput").value = ""; // Reset search field
-            loadGifs(""); // Load trending on open
+            document.getElementById("gifSearchInput").value = ""; 
+            loadGifs(""); 
         }
     }
 
     function handleGifSearch() {
-        // Debounce search to avoid hitting API limit on every single keystroke
         clearTimeout(searchTimeout);
         searchTimeout = setTimeout(() => {
             const query = document.getElementById("gifSearchInput").value.trim();
