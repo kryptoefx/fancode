@@ -219,7 +219,8 @@
         const box = document.getElementById("gifBox");
         box.innerHTML = "Loading GIFs...";
         
-        fetch(`https://api.giphy.com/v1/gifs/trending?api_key=${GIPHY_API_KEY}&limit=12&rating=g`)
+        // Changed &limit=12 to &limit=48 to show more options
+        fetch(`https://api.giphy.com/v1/gifs/trending?api_key=${GIPHY_API_KEY}&limit=48&rating=g`)
         .then(response => response.json())
         .then(content => {
             box.innerHTML = "";
