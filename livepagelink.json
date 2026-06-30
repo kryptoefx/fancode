@@ -10,7 +10,7 @@
     "device": "Android/IOS/PC",
     "language": "CHINESE",
     "region": "WORLDWIDE",
-    "url": "https://news.taazaboom.com/p/b4x-sports.html?live=https://live05.koepgd.app/live/24561735.m3u8"
+    "url": "https://news.taazaboom.com/p/b4x-sports.html?live=https://play.gzxdby.com/live/183334344568_2547627555.m3u8"
   },
   
 
@@ -50,12 +50,22 @@
  {
     "quality": "HD",
     "device": "Android/IOS/PC",
-    "language": "DUTCH",
+    "language": "ENGLISH",
     "region": "WORLDWIDE",
-    "url": "https://news.taazaboom.com/p/b4x-sports.html?live=https://cdn011.viaplus.site/fussballtv1uhd-de.m3u8"
+    "url": "https://news.taazaboom.com/p/b4x-sports.html?live=https://inproviszon.st/fox-usa.m3u8"
   },
 
  
+ 
+ 
+ {
+    "quality": "HD",
+    "device": "Android/IOS/PC",
+    "language": "ENGLISH",
+    "region": "WORLDWIDE",
+    "url": "https://news.taazaboom.com/p/b4x-sports.html?live=https://inproviszon.st/tsn1-xyz.m3u8"
+  },
+
  
  
 
@@ -64,8 +74,8 @@
   {
     "quality": "HD",
     "device": "Android/PC/IOS",
-    "language": "ENGLISH",
+    "language": "ENGLISH/SPANISH",
     "region": "WORLDWIDE",
-    "url": "https://news.taazaboom.com/p/b4x-sports.html?live=https://paribirdflygame.blogspot.com/?b4x=https://oswald74vf.d2p5clady1u1si3firm.cfd/football/fifa-world-cup-4374268/germany-vs-paraguay.html?icg=SU4"
+    "url": "https://news.taazaboom.com/p/b4x-sports.html?live=https://paribirdflygame.blogspot.com/?b4x=https://oswald74vf.d2p5clady1u1si3firm.cfd/football/fifa-world-cup-4374267/cote-divoire-vs-norway.html?icg=SU4"
   }
 ]
