@@ -1,253 +1,231 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="utf-8">
-<title>Custom Match Scores</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B4X Sports Live Chat</title>
+    <!-- Firebase App and Database SDKs (Compat version to match your template) -->
+    <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-database-compat.js"></script>
 
-<style>
-
-body{
-margin:0;
-background:#f2f2f2;
-font-family:Arial,sans-serif;
-}
-
-.tabs{
-display:flex;
-gap:5px;
-padding:10px;
-}
-
-.tabs button{
-flex:1;
-padding:12px;
-border:none;
-background:#0078ff;
-color:#fff;
-font-weight:bold;
-cursor:pointer;
-border-radius:6px;
-}
-
-.tabs button.active{
-background:#004fc4;
-}
-
-.card{
-background:#fff;
-margin:10px;
-border-radius:10px;
-padding:12px;
-box-shadow:0 2px 10px rgba(0,0,0,.15);
-overflow:hidden;
-}
-
-.team{
-width:35%;
-float:left;
-text-align:center;
-}
-
-.center{
-width:30%;
-float:left;
-text-align:center;
-}
-
-.logo{
-width:55px;
-height:55px;
-object-fit:contain;
-}
-
-.score{
-font-size:28px;
-font-weight:bold;
-}
-
-.badge{
-display:inline-block;
-padding:4px 10px;
-border-radius:20px;
-color:#fff;
-font-size:12px;
-margin-top:5px;
-}
-
-.live{
-background:#d60000;
-}
-
-.upcoming{
-background:#0078ff;
-}
-
-.finished{
-background:#28a745;
-}
-
-.info{
-clear:both;
-margin-top:10px;
-padding-top:10px;
-border-top:1px solid #eee;
-text-align:center;
-}
-
-</style>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1c2733;
+            color: #fff;
+            margin: 0;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+        }
+        .chat-container {
+            width: 100%;
+            max-width: 450px;
+            background: #151515;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            height: 85vh;
+        }
+        .chat-header {
+            background: #1a73e8;
+            padding: 12px;
+            font-weight: bold;
+            text-align: center;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
+        .chat-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            border-bottom: 1px solid #1c2733;
+        }
+        .message {
+            margin-bottom: 15px;
+            background: #121a23;
+            padding: 8px 12px;
+            border-radius: 8px;
+            word-wrap: break-word;
+        }
+        .message .username {
+            font-weight: bold;
+            color: #ffe005;
+            font-size: 13px;
+            margin-bottom: 4px;
+        }
+        .message img {
+            max-width: 150px;
+            border-radius: 4px;
+            margin-top: 5px;
+            display: block;
+        }
+        .chat-input-area {
+            padding: 10px;
+            background: #151515;
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+        input[type="text"] {
+            flex: 1;
+            background: #121a23;
+            border: 1px solid #1c2733;
+            color: white;
+            padding: 10px;
+            border-radius: 20px;
+            outline: none;
+        }
+        button {
+            background: #1a73e8;
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button#gif-btn {
+            background: #ffe005;
+            color: #000;
+        }
+        .gif-box {
+            display: none;
+            position: absolute;
+            bottom: 70px;
+            background: #121a23;
+            border: 1px solid #1c2733;
+            width: 90%;
+            max-width: 400px;
+            height: 200px;
+            overflow-y: auto;
+            padding: 10px;
+            border-radius: 8px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 5px;
+            z-index: 10;
+        }
+        .gif-box img {
+            width: 100%;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+    </style>
 </head>
 <body>
 
-<div class="tabs">
-<button class="active" onclick="showTab('live')">LIVE</button>
-<button onclick="showTab('upcoming')">UPCOMING</button>
-<button onclick="showTab('finished')">FINISHED</button>
-</div>
+<div class="chat-container">
+    <div class="chat-header">⚽ B4X Public Live Chat</div>
+    <div class="chat-messages" id="chatMessages"></div>
+    
+    <div class="gif-box" id="gifBox"></div>
 
-<div id="matches"></div>
+    <div class="chat-input-area" style="position: relative;">
+        <button id="gif-btn" onclick="toggleGifBox()">GIF</button>
+        <input type="text" id="messageInput" placeholder="Type a message...">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+</div>
 
 <script>
+    // Your actual configuration credentials
+    const firebaseConfig = {
+        apiKey: "AIzaSyDC1VIx9cQ6D2ybOCEfPt0NKt9y5S23b8Y",
+        authDomain: "livechat-6b9a0.firebaseapp.com",
+        databaseURL: "https://livechat-6b9a0-default-rtdb.firebaseio.com", 
+        projectId: "livechat-6b9a0",
+        storageBucket: "livechat-6b9a0.firebasestorage.app",
+        messagingSenderId: "730992403908",
+        appId: "1:730992403908:web:6d3f5115393b782f1c7091"
+    };
+    
+    // Initialize Using Compat Layout
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
 
-let allGames=[];
-let currentTab='live';
+    // Assign generic usernames
+    const username = "Guest_" + Math.floor(Math.random() * 9000 + 1000);
 
-function logo(id){
-return `https://imagecache.365scores.com/image/upload/f_png,w_80,h_80,c_limit,q_auto:eco,dpr_2,d_Competitors:default1.png/v1/Competitors/${id}`;
-}
+    // Read Messages Realtime
+    db.ref("messages").limitToLast(50).on("child_added", (snapshot) => {
+        const data = snapshot.val();
+        const chatMessages = document.getElementById("chatMessages");
+        
+        let content = data.message;
+        if(data.type === "gif") {
+            content = `<img src="${data.message}" alt="gif">`;
+        }
 
-function showTab(tab){
+        chatMessages.innerHTML += `
+            <div class="message">
+                <div class="username">${data.username}</div>
+                <div>${content}</div>
+            </div>
+        `;
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    });
 
-currentTab=tab;
+    // Send Processing
+    function sendMessage() {
+        const input = document.getElementById("messageInput");
+        if(input.value.trim() === "") return;
 
-document.querySelectorAll('.tabs button')
-.forEach(btn=>btn.classList.remove('active'));
+        db.ref("messages").push({
+            username: username,
+            message: input.value,
+            type: "text"
+        });
+        input.value = "";
+    }
 
-if(tab==='live')
-document.querySelectorAll('.tabs button')[0].classList.add('active');
+    document.getElementById("messageInput").addEventListener("keypress", function(e) {
+        if(e.key === 'Enter') sendMessage();
+    });
 
-if(tab==='upcoming')
-document.querySelectorAll('.tabs button')[1].classList.add('active');
+    // Integrated GIPHY API Key
+    const GIPHY_API_KEY = "oLK3TSYI8YzFI9xfLLHYHOwUGe4Is7Mn";
 
-if(tab==='finished')
-document.querySelectorAll('.tabs button')[2].classList.add('active');
+    function toggleGifBox() {
+        const box = document.getElementById("gifBox");
+        if(box.style.display === "grid") {
+            box.style.display = "none";
+        } else {
+            box.style.display = "grid";
+            loadTrendingGifs();
+        }
+    }
 
-render();
-}
+    function loadTrendingGifs() {
+        const box = document.getElementById("gifBox");
+        box.innerHTML = "Loading GIFs...";
+        
+        fetch(`https://api.giphy.com/v1/gifs/trending?api_key=${GIPHY_API_KEY}&limit=12&rating=g`)
+        .then(response => response.json())
+        .then(content => {
+            box.innerHTML = "";
+            content.data.forEach(gif => {
+                const imgUrl = gif.images.fixed_height_small.url;
+                const img = document.createElement("img");
+                img.src = imgUrl;
+                img.onclick = function() {
+                    sendGif(imgUrl);
+                };
+                box.appendChild(img);
+            });
+        }).catch(err => {
+            box.innerHTML = "Error loading GIFs.";
+        });
+    }
 
-function render(){
-
-let games=[];
-
-if(currentTab==='live')
-games=allGames.filter(g=>g.statusGroup===3);
-
-if(currentTab==='upcoming')
-games=allGames.filter(g=>g.statusGroup===2);
-
-if(currentTab==='finished')
-games=allGames.filter(g=>g.statusGroup===4);
-
-const container=document.getElementById('matches');
-
-if(!games.length){
-container.innerHTML='<div class="card">No matches available</div>';
-return;
-}
-
-container.innerHTML='';
-
-games.forEach(game=>{
-
-const home=game.homeCompetitor||{};
-const away=game.awayCompetitor||{};
-
-let score='VS';
-let badge='';
-let cls='upcoming';
-
-if(game.statusGroup===3){
-
-score=`${home.score||0} - ${away.score||0}`;
-badge=game.shortStatusText||'LIVE';
-cls='live';
-
-}
-
-if(game.statusGroup===4){
-
-score=`${home.score||0} - ${away.score||0}`;
-badge='FT';
-cls='finished';
-
-}
-
-if(game.statusGroup===2){
-
-badge=new Date(game.startTime)
-.toLocaleTimeString([],{
-hour:'2-digit',
-minute:'2-digit'
-});
-
-}
-
-container.innerHTML+=`
-
-<div class="card">
-
-<div class="team">
-<img class="logo" src="${logo(home.id)}">
-<div>${home.name||''}</div>
-</div>
-
-<div class="center">
-<div class="score">${score}</div>
-<div class="badge ${cls}">
-${badge}
-</div>
-</div>
-
-<div class="team">
-<img class="logo" src="${logo(away.id)}">
-<div>${away.name||''}</div>
-</div>
-
-<div class="info">
-Match ID: ${game.id}
-</div>
-
-</div>
-
-`;
-
-});
-
-}
-
-async function loadMatches(){
-
-try{
-
-const res=await fetch('scores.php');
-const data=await res.json();
-
-allGames=data.games||[];
-
-render();
-
-}catch(e){
-
-document.getElementById('matches').innerHTML=
-'<div class="card">Failed to load matches</div>';
-
-}
-
-}
-
-loadMatches();
-
-setInterval(loadMatches,30000);
-
+    function sendGif(url) {
+        db.ref("messages").push({
+            username: username,
+            message: url,
+            type: "gif"
+        });
+        document.getElementById("gifBox").style.display = "none";
+    }
 </script>
 
 </body>
