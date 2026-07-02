@@ -58,7 +58,16 @@
     "region": "WORLDWIDE",
     "url": "https://news.taazaboom.com/p/b4x-sports.html?live=https://apxvf0ws91.yarncdn.live/live/sd-6MvYMRSYcxLspmei7z/playlist.m3u8"
   },
-  
+
+ {
+    "quality": "HD",
+    "device": "Android/IOS/PC",
+    "language": "ENGLISH",
+    "region": "WORLDWIDE",
+    "url": "https://news.taazaboom.com/p/b4x-sports.html?live=https://sxdodgers.s3.us-east-1.amazonaws.com/main.m3u8"
+  },
+
+ 
  {
     "quality": "HD",
     "device": "Android/IOS/PC",
