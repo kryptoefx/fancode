@@ -45,7 +45,14 @@
   },
 
 
- 
+  {
+    "quality": "HD",
+    "device": "Android/IOS/PC",
+    "language": "ENGLISH",
+    "region": "WORLDWIDE",
+    "url": "https://news.taazaboom.com/p/b4x-sports.html?live=https://cp11.adabmedia.com/hls2/sport.m3u8"
+  },
+
  {
     "quality": "HD",
     "device": "Android/IOS/PC",
