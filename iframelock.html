@@ -1,14 +1,83 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <title>Redirecting...</title>
-  <script>
-    window.location.href = "https://whatsapp.com/channel/0029Vb6uWbAHVvTThWTber0n";
-  </script>
-</head>
-<body>
-  Redirecting to WhatsApp...
-</body>
-</html>
-bh
+<iframe
+    id="vidio"
+    class="vidio"
+    width="100%"
+    height="400px"
+    src="https://i.pinimg.com/originals/67/c2/19/67c21909f786d78a4b4129113491ac2a.gif"
+    title="Lsbt"
+    frameborder="0"
+    scrolling="no"
+    loading="lazy"
+    allowfullscreen
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox allow-presentation allow-downloads">
+</iframe>
+
+<div class="konten-atas">
+</div>
+
+<style>
+.animate{
+    transition:all .1s;
+    -webkit-transition:all .1s;
+}
+
+.action-button{
+    position:relative;
+    padding:5px 10px;
+    margin:0 10px 10px 0;
+    border-radius:8px;
+    font-family:'Rubik',sans-serif;
+    font-size:20px;
+    color:#FFF;
+    text-decoration:none;
+}
+
+.blue{
+    background:#3498DB;
+    border-bottom:5px solid #2980B9;
+    text-shadow:0 -2px #2980B9;
+}
+
+.green{
+    background:#82BF56;
+    border-bottom:5px solid #669644;
+    text-shadow:0 -2px #669644;
+}
+</style>
+
+<div id="offline-message" style="display:none;">
+    No internet connection.
+</div>
+
+<script>
+const iframe = document.getElementById("vidio");
+const offlineMessage = document.getElementById("offline-message");
+
+function checkConnection() {
+    if (!navigator.onLine) {
+        offlineMessage.style.display = "block";
+        iframe.style.display = "none";
+    } else {
+        offlineMessage.style.display = "none";
+        iframe.style.display = "block";
+    }
+}
+
+window.addEventListener("online", checkConnection);
+window.addEventListener("offline", checkConnection);
+checkConnection();
+
+iframe.addEventListener("load", checkConnection);
+</script>
+
+<script>
+const urlParams = new URLSearchParams(window.location.search);
+const file = urlParams.get("b4x");
+
+if (file) {
+    iframe.src = file;
+}
+</script>
+
+<div class="loading" id="loading"></div>
