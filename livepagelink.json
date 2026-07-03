@@ -44,21 +44,7 @@
  
  
 
- {
-    "quality": "HD",
-    "device": "Android/IOS/PC",
-    "language": "NO COMMENTARY",
-    "region": "WORLDWIDE",
-    "url": "https://news.taazaboom.com/p/b4x-sports.html?live=https://apxvf0ws91.yarncdn.live/live/sd-6MvYMRSYcxLspmei7z/playlist.m3u8"
-  },
-
- {
-    "quality": "HD",
-    "device": "Android/IOS/PC",
-    "language": "ENGLISH",
-    "region": "WORLDWIDE",
-    "url": "https://news.taazaboom.com/p/b4x-sports.html?live=https://sxdodgers.s3.us-east-1.amazonaws.com/main.m3u8"
-  },
+ 
 
  
  {
@@ -66,7 +52,7 @@
     "device": "Android/IOS/PC",
     "language": "SPANISH/ENGLISH",
     "region": "WORLDWIDE",
-    "url": "https://news.taazaboom.com/p/b4x-sports.html?live=https://paribirdflygame.blogspot.com/?b4x=https://oswald74vf.d2p5clady1u1si3firm.cfd/football/fifa-world-cup-4374261/portugal-vs-croatia.html?icg=SU4"
+    "url": "https://news.taazaboom.com/p/b4x-sports.html?live=https://paribirdflygame.blogspot.com/?b4x=https://oswald74vf.d2p5clady1u1si3firm.cfd/football/fifa-world-cup-4338087/switzerland-vs-algeria.html?icg=SU4"
   },
 
  {
@@ -74,7 +60,7 @@
     "device": "Android/IOS/PC",
     "language": "ENGLISH",
     "region": "WORLDWIDE",
-    "url": "https://news.taazaboom.com/p/b4x-sports.html?live=https://embed.st/embed/admin/ppv-portugal-vs-croatia/3"
+    "url": "https://news.taazaboom.com/p/b4x-sports.html?live=https://embed.st/embed/admin/ppv-switzerland-vs-algeria/1"
   },
 
  
@@ -85,7 +71,7 @@
     "device": "Android/IOS/PC",
     "language": "ENGLISH",
     "region": "WORLDWIDE",
-    "url": "https://news.taazaboom.com/p/b4x-sports.html?live=https://embed.st/embed/admin/ppv-portugal-vs-croatia/1"
+    "url": "https://news.taazaboom.com/p/b4x-sports.html?live=https://embed.st/embed/admin/ppv-switzerland-vs-algeria/3"
   },
 
  
@@ -98,6 +84,6 @@
     "device": "Android/PC/IOS",
     "language": "ENGLISH/SPANISH",
     "region": "WORLDWIDE",
-    "url": "https://news.taazaboom.com/p/b4x-sports.html?live=https://paribirdflygame.blogspot.com/?b4x=https://oswald74vf.d2p5clady1u1si3firm.cfd/football/fifa-world-cup-4374261/portugal-vs-croatia.html?icg=SU4"
+    "url": "https://news.taazaboom.com/p/b4x-sports.html?live=https://paribirdflygame.blogspot.com/?b4x=https://oswald74vf.d2p5clady1u1si3firm.cfd/football/fifa-world-cup-4338087/switzerland-vs-algeria.html?icg=SU4"
   }
 ]
